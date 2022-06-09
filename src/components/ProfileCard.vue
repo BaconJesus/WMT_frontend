@@ -1,8 +1,8 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 <template>
-  <div class="main bg-blue-200 grid place-items-center h-screen">
+    <div class="flex-shrink px-4 max-w-full w-full sm:w-1/2 lg:w-1/3 lg:px-6 wow fadeInUp" data-wow-duration="1s" style="visibility: visible; animation-duration: 1s; animation-name: fadeInUp;">
     <!--card-->
-    <div class="card bg-white flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl w-64">
+    <div class="card bg-white flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl w-64 ">
       <!--profile-image-->
       <div class="profile mx-auto rounded-full py-2 w-16 ">
         <img src="/#" alt="profile">
