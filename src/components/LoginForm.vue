@@ -1,16 +1,16 @@
 <template>
-  <div class="main  flex items-center justify-center h-screen">
+  <div class="main mt-[300px] px-[550px] items-center justify-center h-screen">
 <!--    <div class="card p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 lg:p-8 dark:bg-white ">-->
       <form class="space-y-6" action="#">
         <h5 class="login flex items-center justify-center text-7xl font-sans font-bold text-gray-900 drop-shadow-xl dark:text-cyan-500" >Login</h5>
         <div>
-<!--          <label for="email" class="block mb-2 text-md font-medium text-gray-900 dark:text-sky-900 ">Email</label>-->
+          <label for="email" class="block mb-2 text-md font-medium text-gray-900 dark:text-sky-900 ">Email</label>
 <!--          <input type="email" name="email" id="email" class="bg-blue-300 border border-blue-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-blue-300 dark:border-blue-500 dark:placeholder-gray-300 dark:text-white" placeholder="name@company.com" required>-->
           <input type="email" name="email" id="email" class="bg-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500  block w-full p-2.5 dark:bg-blue-300 dark:border-blue-500 dark:placeholder-gray-600 dark:text-white font-sans"  placeholder="name@company.com" required>
 
         </div>
         <div>
-<!--          <label for="password" class="block mb-2 text-md font-medium text-gray-900 dark:text-sky-900">Password</label>-->
+          <label for="password" class="block mb-2 text-md font-medium text-gray-900 dark:text-sky-900">Password</label>
           <input type="password" name="password" id="password" placeholder="********" class="bg-blue-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-blue-500 dark:border-blue-500 dark:placeholder-gray-600 dark:text-white" required>
         </div>
         <div class="flex items-start">
