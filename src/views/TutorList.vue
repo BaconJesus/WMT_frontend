@@ -4,7 +4,6 @@
       <header class="text-center mx-auto mb-16 lg:px-20">
         <h2 class="text-2xl leading-normal mb-2 font-bold text-black">Where is My Tutor</h2>
       </header>
-
 <!--      searchbar-->
     <div class="searchbar">
       <form>
@@ -18,29 +17,69 @@
         </div>
       </form>
     </div>
-
-
-
       <div class="flex flex-wrap flex-row -mx-4 text-center">
-        <ProfileCard />
-        <ProfileCard />
-        <ProfileCard />
-        <ProfileCard />
-        <ProfileCard />
-        <ProfileCard />
+        <ProfileCard v-for="item in tutors" :key="item.id" :tutor="item"/>
       </div>
+      <div class="pagination">
+      <router-link
+        id="page-prev"
+        :to="{ name: 'TutorList', query: { page: page - 1 } }"
+        rel="prev"
+        v-if="page != 1"
+      >
+        Prev Page</router-link
+      >
+
+      <router-link
+        id="page-next"
+        :to="{ name: 'TutorList', query: { page: page + 1 } }"
+        rel="next"
+        v-if="hasNextPage"
+      >
+        Next Page</router-link
+      >
     </div>
   </div>
+</div>
 
 </template>
 
 <script>
 import ProfileCard from "@/components/ProfileCard";
-
+import TutorService from "@/services/TutorService.js";
 
 export default {
   name: "TutorList",
-  components: {ProfileCard, }
+  props: {
+    page: {
+      type: Number,
+      required: true
+    }
+  },
+  components: {ProfileCard, },
+  data() {
+    return {
+      tutors: null,
+      totalEvents: 0
+    }
+  },
+  // eslint-disable-next-line no-unused-vars
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    TutorService.getTutors(parseInt(routeTo.query.page) || 1,9)
+      .then((response) => {
+        next((comp) => {
+          comp.tutors = response.data.data.getTutors.content;
+          comp.totalElements = response.data.data.getTutors.totalElements;
+        })
+      })
+  },
+  computed: {
+    hasNextPage() {
+      let totalPages = Math.ceil(this.totalElements / 9) // 2 is events per page
+      return this.page < totalPages
+    }
+  }
+
 };
 </script>
 

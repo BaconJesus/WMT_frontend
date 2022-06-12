@@ -142,7 +142,7 @@
 <!--<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer>-->
 <script>
 export default {
-  name: "profilePage",
+  name: "ProfilePage",
   data() {
     return {
       icon: require("@/assets/icon.png"),
