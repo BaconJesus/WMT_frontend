@@ -9,21 +9,25 @@
           <div class="card bg-white flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl w-64 ">
             <!--profile-image-->
             <div class="profile mx-auto rounded-full py-2 w-16 ">
-              <img src="/#" alt="profile">
+              <img :src="tutor.profileImg" alt="profile">
             </div>
             <!--name-->
             <div class="name text-gray-800 text-2xl font-medium mt-4 ">
-              <p>Name Surname</p>
+              <p>{{tutor.user.displayname}}</p>
             </div>
-            <!--Subject-->
+            <!-- Subject -->
             <div class="subject text-gray-700 mt-4">
-              <p>Math, Science </p>
+              <p>{{tutor.user.firstname}} {{tutor.user.lastname}} </p>
             </div>
             <!-- button -->
             <div class="w-full mt-8">
+              <router-link
+                :to="{ name: 'ProfilePage', params: { id: tutor.id } }"
+              >
               <button class="bg-blue-500 py-2 px-4 hover:bg-blue-600 text-white w-full font-semibold rounded-lg shadow-lg">
                 View Profile
               </button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -36,8 +40,11 @@
 
 export default {
   name: "ProfileCard",
-  components: { },
-  data() {
-  },
+  props: {
+    tutor: {
+      type: Object,
+      required: true
+    }
+  }
 };
 </script>

@@ -158,7 +158,7 @@
 
 <script>
 export default {
-  name: "profilePage",
+  name: "ProfilePage",
   data() {
     return {
       icon: require("@/assets/icon.png"),
