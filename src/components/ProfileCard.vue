@@ -9,7 +9,12 @@
           <div class="card bg-white flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl w-64 ">
             <!--profile-image-->
             <div class="profile mx-auto rounded-full py-2 w-16 ">
+              <div v-if="!tutor.profileImg">
+              <img :src="icon" alt="profile">
+              </div>
+              <div v-else>
               <img :src="tutor.profileImg" alt="profile">
+              </div>
             </div>
             <!--name-->
             <div class="name text-gray-800 text-2xl font-medium mt-4 ">
@@ -45,6 +50,11 @@ export default {
       type: Object,
       required: true
     }
-  }
+  },
+  data() {
+    return {
+      icon: require("@/assets/icon.png"),
+    };
+  },
 };
 </script>
