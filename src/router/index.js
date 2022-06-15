@@ -6,6 +6,7 @@ import RegisterForm from "@/components/RegisterForm";
 import browse from "@/components/browse";
 import profilePage from "@/views/profilePage";
 import CreateTutorProfile from "@/views/CreateTutorProfile";
+import CreateStudentProfile from "@/views/CreateStudentProfile";
 
 const routes = [
     { path: "/", name: "HomePage", component: Home },
@@ -15,6 +16,7 @@ const routes = [
     { path: "/test", component: browse },
     { path: "/profile/:id", name: "ProfilePage", component: profilePage },
     { path: "/createtutor", component: CreateTutorProfile },
+    { path: "/createstudent", component: CreateStudentProfile },
 
 ];
 
