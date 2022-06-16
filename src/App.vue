@@ -1,7 +1,8 @@
 <template>
+  <div class="flex flex-col h-screen overflow-hidden">
   <AppLayout />
   <router-view />
-
+  </div>
 </template>
 
 <script>

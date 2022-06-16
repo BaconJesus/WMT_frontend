@@ -8,6 +8,7 @@
 import DesktopNavbar from "@/components/DesktopNavbar";
 // import NavbarDropdown from "@/components/NavbarDropdown";
 export default {
+   inject: ['GStore'],
   name: "AppLayout",
   components: {DesktopNavbar, }
 }
