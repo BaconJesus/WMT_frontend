@@ -25,7 +25,7 @@
         </div>
         <div v-else>
           <router-link :to="{ name: 'ProfilePage', params: { id: GStore.currentUser.tutor.id } }">
-          <img :src="GStore.currentProfileImg" alt="profile" class="w-10 h-10 rounded-full">
+          <img :src="GStore.currentUser.tutor.profileImg" alt="profile" class="w-10 h-10 rounded-full">
           <div class="text-white flex gap-x-4 items-center">{{GStore.currentUser.firstname}} {{GStore.currentUser.lastname}}</div>
           </router-link>
         </div>
@@ -39,7 +39,7 @@
         </div>
         <div v-else>
           <router-link :to="{ name: 'StProfilePage', params: { id: GStore.currentUser.student.id } }">
-          <img :src="GStore.currentProfileImg" alt="profile" class="w-10 h-10 rounded-full">
+          <img :src="GStore.currentUser.student.profileImg" alt="profile" class="w-10 h-10 rounded-full">
           <div class="text-white flex gap-x-4 items-center">{{GStore.currentUser.firstname}} {{GStore.currentUser.lastname}}</div>
           </router-link>
         </div>

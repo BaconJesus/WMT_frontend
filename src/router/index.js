@@ -10,6 +10,8 @@ import CreateStudentProfile from "@/views/CreateStudentProfile";
 import RegisterAs from '@/views/RegisterAs';
 import NoProfile from '@/views/NoProfile';
 import StProfilePage from '@/views/StProfilePage';
+import PreferenceService from "@/services/PreferenceService";
+import GStore from '@/store'
 
 const routes = [
     { path: "/", name: "HomePage", component: Home },
@@ -19,7 +21,21 @@ const routes = [
     { path: "/register/:role", name: "RegisterPage", component: RegisterForm },
     { path: "/test", component: browse },
     { path: "/profile/:id", name: "ProfilePage", component: ProfilePage },
-    { path: "/createtutor", name: 'CreateTutor', component: CreateTutorProfile },
+    {
+        path: "/createtutor/:id",
+        name: 'CreateTutor',
+        component: CreateTutorProfile,
+        beforeEnter: () => {
+            return PreferenceService.getPreferences()
+                .then((response) => {
+                    GStore.preferences = response.data.data.getPreferences
+                })
+                .catch(() => {
+                    GStore.preferences = null
+                    console.log('cannot load preferences')
+                })
+        }
+    },
     { path: "/createstudent", name: 'CreateStudent', component: CreateStudentProfile },
     { path: "/noprof", name: 'NoProfile', component: NoProfile },
     { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage }
