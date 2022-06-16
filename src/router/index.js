@@ -10,6 +10,8 @@ import CreateStudentProfile from "@/views/CreateStudentProfile";
 import RegisterAs from '@/views/RegisterAs';
 import NoProfile from '@/views/NoProfile';
 import StProfilePage from '@/views/StProfilePage';
+import TutorNameList from "@/views/TutorNameList";
+import StudentNameList from "@/views/StudentNameList";
 
 const routes = [
     { path: "/", name: "HomePage", component: Home },
@@ -22,7 +24,9 @@ const routes = [
     { path: "/createtutor", name: 'CreateTutor', component: CreateTutorProfile },
     { path: "/createstudent", name: 'CreateStudent', component: CreateStudentProfile },
     { path: "/noprof", name: 'NoProfile', component: NoProfile },
-    { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage }
+    { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage },
+    { path: "/tutornamelist", name: "TutorNameList",component: TutorNameList, props: (route) => ({ page: parseInt(route.query.page) || 1})},
+    { path: "/studentnamelist", name: "StudentNameList",component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1})}
 
 ];
 
