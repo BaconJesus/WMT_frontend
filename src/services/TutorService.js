@@ -31,15 +31,13 @@ export default {
         }
         return graphqlClient(graphql)
     },
-
-    getTutor(id){
-        const query = `
-        query($id:Int){
-            getTutor(id:$id){
+    createTutor(tutor, id) {
+        const mutation = `
+        mutation($tutor:InputTutor, $userid:Int){
+            createTutor(tutor:$tutor, userid:$userid){
                 id
-                description
                 profileImg
-                overallRating
+                description
                 students{
                     user{
                         firstname
@@ -56,15 +54,6 @@ export default {
                 preferences{
                     name
                 }
-                reviews{
-                    description
-                    rating
-                    student{
-                        user{
-                            displayname
-                        }
-                    }
-                }
                 user{
                     firstname
                     lastname
@@ -75,15 +64,13 @@ export default {
         }
         `
         const variable = {
-            query: {
-                id: id
-            }
+            tutor: tutor,
+            userid: id
         }
 
         const graphql = {
-            query: query,
+            query: mutation,
             variables: variable
         }
         return graphqlClient(graphql)
-        }
     }
