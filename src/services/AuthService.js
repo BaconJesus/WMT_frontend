@@ -10,9 +10,6 @@ export default {
             .then((response) => {
                 localStorage.setItem('token', response.data.token)
                 localStorage.setItem('user', JSON.stringify(response.data.user))
-                    // localStorage.setItem('profileimg', response.data.user.profileImg)
-                    // localStorage.setItem('displayname', response.data.user.displayname)
-                    // localStorage.setItem('fullname', response.data.user.firstname + ' ' + response.data.user.lastname)
                 GStore.currentUser = response.data.user
                 return Promise.resolve(response.data)
             })
@@ -24,11 +21,43 @@ export default {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         GStore.currentUser = null
-        GStore.currentFirstname = null
-        GStore.currentLastname = null
-        GStore.currentDisplayname = null
+    },
+    registerTutor(user) {
+        return apiClient
+            .post('/register/tutor', {
+                username: user.username,
+                password: user.password,
+                email: user.username,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                displayname: user.displayname
+            })
+    },
+    registerStudent(user) {
+        return apiClient
+            .post('/register/student', {
+                username: user.username,
+                password: user.password,
+                email: user.username,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                displayname: user.displayname
+            })
     },
     getUser() {
         return localStorage.getItem('user')
-    }
+    },
+    hasRoles(roles) {
+        if (GStore.currentUser && roles) {
+            let setRoles = []
+            for (var x = 0; x < GStore.currentUser.authorities.length; x++) {
+                setRoles.push(GStore.currentUser.authorities[x].name)
+            }
+            let containRoles = setRoles.includes(roles)
+
+            return containRoles
+        } else {
+            return false
+        }
+    },
 }
