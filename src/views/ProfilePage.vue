@@ -11,11 +11,16 @@
           <div class="bg-white p-3 border-t-4 border-sky-400">
             <div class="image overflow-hidden">
               <div class="h-auto w-full mx-auto rounded-lg">
-              <img :src="icon" />
+                <div v-if="!tutor.profileImg">
+                  <img :src="icon" alt="profile">
+                </div>
+                <div v-else>
+                  <img :src="tutor.profileImg" alt="profile">
+                </div>
             </div>
             </div>
-            <h1 class="name text-gray-900 font-bold text-xl leading-8 my-1">Name Surname</h1>
-            <h1 class="rating text-gray-900 font-bold text-xl leading-8 my-1">Rating 4.8⭐</h1>
+            <h1 class="name text-gray-900 font-bold text-xl leading-8 my-1">{{tutor.user.firstname}} {{tutor.user.lastname}}</h1>
+<!--            <h1 class="rating text-gray-900 font-bold text-xl leading-8 my-1">Rating 4.8⭐</h1>-->
           </div>
           <!-- Student list  -->
           <div class="bg-white p-3 hover:shadow">
@@ -75,9 +80,7 @@
             <div class="text-gray-700">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
-                  <div class="description px-4 py-2 ">Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.
-                    Reprehenderit, eligendi dolorum sequi illum qui unde aspernatur non deserunt</div>
+                  <div class="description px-4 py-2 ">{{tutor.user.description}}</div>
 <!--                </div>-->
               </div>
             </div>
@@ -137,16 +140,16 @@
             <!-- End of Subject, preferrence -->
           </div>
           <!--        comment box-->
-          <div class="max-w-lg shadow-md ">
-            <form action="" class="w-full p-4 ">
-              <div class="mb-2">
-                <label for="comment" class="text-lg text-gray-600">Add Review</label>
-                <textarea class="w-full h-20 p-2 border rounded focus:outline-none focus:ring-gray-300 focus:ring-1"
-                          name="comment" placeholder=""></textarea>
-              </div>
-              <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
-            </form>
-          </div>
+<!--          <div class="max-w-lg shadow-md ">-->
+<!--            <form action="" class="w-full p-4 ">-->
+<!--              <div class="mb-2">-->
+<!--                <label for="comment" class="text-lg text-gray-600">Add Review</label>-->
+<!--                <textarea class="w-full h-20 p-2 border rounded focus:outline-none focus:ring-gray-300 focus:ring-1"-->
+<!--                          name="comment" placeholder=""></textarea>-->
+<!--              </div>-->
+<!--              <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>-->
+<!--            </form>-->
+<!--          </div>-->
         </div>
 
       </div>
@@ -156,14 +159,28 @@
 
 </template>
 
+
 <script>
+import TutorService from "@/services/TutorService.js";
 export default {
   name: "" +
       "ProfilePage",
+
   data() {
     return {
       icon: require("@/assets/icon.png"),
+      tutor: null,
     };
+  },
+  beforeRouteEnter(routeTo, routeFrom, next) {
+    TutorService.getTutor(routeTo.params.id)
+        .then((response) => {
+          next((comp) => {
+            comp.tutor = response.data.data.getTutor;
+            console.log(response.data.data.getTutor)
+          })
+        });
+
   },
 }
 </script>

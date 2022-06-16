@@ -20,7 +20,7 @@ const routes = [
     { path: "/regcheck", name: "RegisterCheck", component: RegisterAs },
     { path: "/register/:role", name: "RegisterPage", component: RegisterForm },
     { path: "/test", component: browse },
-    { path: "/profile/:id", name: "ProfilePage", component: ProfilePage },
+    { path: "/profile/:id", name: "ProfilePage", component: ProfilePage,props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     { path: "/createtutor", name: 'CreateTutor', component: CreateTutorProfile },
     { path: "/createstudent", name: 'CreateStudent', component: CreateStudentProfile },
     { path: "/noprof", name: 'NoProfile', component: NoProfile },
