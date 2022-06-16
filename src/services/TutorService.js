@@ -74,4 +74,3 @@ export default {
         }
         return graphqlClient(graphql)
     }
-}
