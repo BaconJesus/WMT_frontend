@@ -73,4 +73,49 @@ export default {
             variables: variable
         }
         return graphqlClient(graphql)
+    },
+    getTutor(id) {
+        const query = `
+        query($id:Int){
+            getTutor(id:$id){
+                id
+                description
+                profileImg
+                students{
+                    id
+                    profileImg
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+                subjects{
+                    name
+                    category{
+                        name
+                    }
+                }
+                preferences{
+                    name
+                }
+                user{
+                    firstname
+                    lastname
+                    displayname
+                    email
+                }
+            }
+        }
+        `
+        const variable = {
+            id: id
+        }
+
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
     }
+}

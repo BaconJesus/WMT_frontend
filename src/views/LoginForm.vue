@@ -129,7 +129,11 @@ export default {
     handleLogin(user) {
       AuthService.login(user)
         .then(() => {
-          this.$router.push({ name: "HomePage" });
+          var verify = JSON.parse(localStorage.getItem('user'))
+          if(verify.student == null && verify.tutor == null){
+          this.$router.push({ name: "NoProfile" });
+          }
+          else this.$router.push({ name: "HomePage" });
         })
         .catch(() => {
           this.message = "could not login";

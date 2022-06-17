@@ -17,7 +17,7 @@ import GStore from '@/store'
 
 const routes = [
     { path: "/", name: "HomePage", component: Home },
-    { path: "/tutorlist", component: TutorList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
+    { path: "/tutorlist", name: "TutorList", component: TutorList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     { path: "/login", name: "LoginPage", component: LoginForm },
     { path: "/regcheck", name: "RegisterCheck", component: RegisterAs },
     { path: "/register/:role", name: "RegisterPage", component: RegisterForm },
@@ -38,11 +38,11 @@ const routes = [
                 })
         }
     },
-    { path: "/createstudent", name: 'CreateStudent', component: CreateStudentProfile },
+    { path: "/createstudent/:id", name: 'CreateStudent', component: CreateStudentProfile },
     { path: "/noprof", name: 'NoProfile', component: NoProfile },
     { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage },
-    { path: "/tutornamelist", name: "TutorNameList",component: TutorNameList, props: (route) => ({ page: parseInt(route.query.page) || 1})},
-    { path: "/studentnamelist", name: "StudentNameList",component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1})}
+    { path: "/tutornamelist", name: "TutorNameList", component: TutorNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
+    { path: "/studentnamelist", name: "StudentNameList", component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) }
 
 ];
 

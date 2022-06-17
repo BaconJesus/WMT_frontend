@@ -41,7 +41,7 @@
 
 <script>
 import UploadImages from 'vue-upload-drop-images'
-import TutorService from '@/services/TutorService'
+import StudentService from '@/services/StudentService'
 import UploadService from '@/services/UploadService'
 export default {
   inject: ['GStore'],
@@ -66,8 +66,8 @@ export default {
         }))
       .then((response) =>{
         var image = response.map((r) => r.data)       
-        this.tutor.profileImg = image[0]
-        TutorService.createTutor(this.tutor, this.userid)
+        this.student.profileImg = image[0]
+        StudentService.createStudent(this.student, this.userid)
         .then((response) => {
           this.$router.push({
               name: 'StProfilePage',
