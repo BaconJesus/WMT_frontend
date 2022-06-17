@@ -12,6 +12,8 @@ import NoProfile from '@/views/NoProfile';
 import StProfilePage from '@/views/StProfilePage';
 import TutorNameList from "@/views/TutorNameList";
 import StudentNameList from "@/views/StudentNameList";
+import EditStudent from "@/views/EditStudentProfile";
+import EditTutor from "@/views/EditTutorProfile"
 import PreferenceService from "@/services/PreferenceService";
 import GStore from '@/store'
 
@@ -42,7 +44,23 @@ const routes = [
     { path: "/noprof", name: 'NoProfile', component: NoProfile },
     { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage },
     { path: "/tutornamelist", name: "TutorNameList", component: TutorNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
-    { path: "/studentnamelist", name: "StudentNameList", component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) }
+    { path: "/studentnamelist", name: "StudentNameList", component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
+    { path: "/editstudent/:id", name: 'EditStudent', component: EditStudent },
+    {
+        path: "/edittutor/:id",
+        name: 'EditTutor',
+        component: EditTutor,
+        beforeEnter: () => {
+            return PreferenceService.getPreferences()
+                .then((response) => {
+                    GStore.preferences = response.data.data.getPreferences
+                })
+                .catch(() => {
+                    GStore.preferences = null
+                    console.log('cannot load preferences')
+                })
+        }
+    }
 
 ];
 

@@ -10,8 +10,10 @@
 <!--        upload-->
         <div class="max-w-2xl rounded-lg shadow-sm bg-white">
           <div class="m-4">
-            <label class="flex justify-center inline-block mb-2 font-xl text-gray-900 text-3xl">Create Profile </label>
+            <label class="flex justify-center inline-block mb-2 font-xl text-gray-900 text-3xl">Edit Profile </label>
             <div class="flex items-center justify-center w-full">
+              <img v-if="tutor.profileImg !== null" :src="tutor.profileImg" class="h-[300px] w-[300px]"/>
+              <img v-else :src="icon" class="h-[300px] w-[300px]"/>
               <UploadImages :max="1" @changed="handleImage" />
             </div>
           </div>
@@ -95,7 +97,8 @@ export default {
         subjects:[]
       },
       files: [],
-      userid: null,
+      icon: require("@/assets/icon.png"),
+      tutorid: null,
       categories: null,
       categoryId: null,
       subjects: null
@@ -107,15 +110,26 @@ export default {
           return UploadService.uploadFile(file)
         }))
       .then((response) =>{
-        var image = response.map((r) => r.data)       
-        this.tutor.profileImg = image[0]
-        TutorService.createTutor(this.tutor, this.userid)
-        .then((response) => {
-          this.$router.push({
-              name: 'ProfilePage',
-              params: { id: response.data.data.createTutor.id }
+        console.log(this.tutorid)
+        var image = response.map((r) => r.data)
+        if (image[0] == null || image[0] == ''){
+          TutorService.editTutor(this.tutor, this.tutorid)
+            .then((response) => {
+            this.$router.push({
+              name: 'StProfilePage',
+              params: { id: response.data.data.editTutor.id }
             })
         })
+        } else{      
+        this.tutor.profileImg = image[0]
+        TutorService.editTutor(this.tutor, this.tutorid)
+        .then((response) => {
+          this.$router.push({
+              name: 'StProfilePage',
+              params: { id: response.data.data.editTutor.id }
+            })
+        })
+        }
       })
     },
     handleImage(file){
@@ -158,7 +172,7 @@ export default {
       this.tutor.subjects.push({id:id})
       }
     },
-    CheckPreference(id){
+     CheckPreference(id){
       let exist = false
       for (var x = 0; x < this.tutor.preferences.length; x++) {
             if(this.tutor.preferences[x].id == id){
@@ -195,9 +209,15 @@ export default {
   },
    // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
-        next((comp) => {
-          comp.userid = routeTo.params.id;
-          console.log(comp.userid)
+    TutorService.getTutorToEdit(parseInt(routeTo.params.id))
+        .then((response) => {
+          next((comp) => {
+            comp.tutor.description = response.data.data.getTutor.description;
+            comp.tutor.profileImg = response.data.data.getTutor.profileImg;
+            comp.tutor.preferences = response.data.data.getTutor.preferences;
+            comp.tutor.subjects = response.data.data.getTutor.subjects;
+            comp.tutorid = response.data.data.getTutor.id
+          })
         })
   },
 }

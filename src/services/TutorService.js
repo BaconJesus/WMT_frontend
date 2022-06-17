@@ -91,12 +91,14 @@ export default {
                     }
                 }
                 subjects{
+                    id
                     name
                     category{
                         name
                     }
                 }
                 preferences{
+                    id
                     name
                 }
                 user{
@@ -117,5 +119,68 @@ export default {
             variables: variable
         }
         return graphqlClient(graphql)
-    }
+    },
+    editTutor(tutor, id) {
+        const mutation = `
+        mutation($tutor:InputTutor, $id:Int){
+            editTutor(tutor:$tutor, id:$id){
+                id
+                profileImg
+                description
+                students{
+                    user{
+                        firstname
+                        displayname
+                        displayname
+                    }
+                }
+                subjects{
+                    name
+                    category{
+                        name
+                    }
+                }
+                preferences{
+                    name
+                }
+            }
+        }
+        `
+        const variable = {
+            tutor: tutor,
+            id: id
+        }
+
+        const graphql = {
+            query: mutation,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    getTutorToEdit(id) {
+        const query = `
+        query($id:Int){
+            getTutor(id:$id){
+                id
+                description
+                profileImg
+                subjects{
+                    id
+                }
+                preferences{
+                    id
+                }
+            }
+        }
+        `
+        const variable = {
+            id: id
+        }
+
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
 }

@@ -110,5 +110,26 @@ export default {
             variables: variable
         }
         return graphqlClient(graphql)
-    }
+    },
+    editStudent(student, id) {
+        const mutation = `
+        mutation($student:InputStudent, $id:Int){
+            editStudent(student:$student, id:$id){
+                id
+                profileImg
+                description
+            }
+        }
+        `
+        const variable = {
+            student: student,
+            id: id
+        }
+
+        const graphql = {
+            query: mutation,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
 }

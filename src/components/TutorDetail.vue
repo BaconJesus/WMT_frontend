@@ -17,8 +17,12 @@
               <img :src="tutor.profileImg" class="h-[300px] w-[300px]"/>
             </div>
             </div>
-            <h1 class="name text-gray-900 font-bold text-xl leading-8 my-1" v-if="tutor">{{tutor.user.firstname}} {{tutor.user.lastname}}</h1>
+            <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1" v-if="tutor">{{tutor.user.firstname}} {{tutor.user.lastname}}</h1>
             
+          </div>
+          <div v-if="GStore.currentUser.tutor">
+           <router-link v-if="GStore.currentUser.tutor.id === tutor.id" :to="{ name: 'EditTutor', params: { id: tutor.id } }"
+           class="mx-auto px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded w-[200px] flex text-center justify-center">Edit</router-link>
           </div>
           <!-- Student list  -->
           <div class="bg-white p-3 hover:shadow">
@@ -140,6 +144,7 @@
 
 export default {
   name: "TutorDetail",
+  inject: ['GStore'],
   props: {
     tutor: {
       type: Object,
