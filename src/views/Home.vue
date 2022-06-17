@@ -1,7 +1,9 @@
 <template>
-  <div class="text-center overflow-y-scroll section relative pt-20 pb-8 md:pt-16 md:pb-0 bg-white">
-    <p class="text-sky-500 text-3xl">Where is My Tutor</p>
-
+<!--    <p class="text-sky-500 text-3xl">Where is My Tutor</p>-->
+  <div class="flex justify-center w-full ">
+    <div class="w-96">
+    <img :src="logo"  alt="profile">
+    </div>
   </div>
 </template>
 
@@ -11,5 +13,10 @@
 export default {
     inject: ['GStore'],
   name: "HomePage",
+  data() {
+    return {
+      logo: require("@/assets/WMTLogo.png"),
+    };
+  },
 };
 </script>
