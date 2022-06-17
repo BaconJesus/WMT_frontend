@@ -45,6 +45,7 @@
 import UploadImages from 'vue-upload-drop-images'
 import StudentService from '@/services/StudentService'
 import UploadService from '@/services/UploadService'
+import GStore from '@/store'
 export default {
   inject: ['GStore'],
   name: "EditStudentProfile",
@@ -72,6 +73,7 @@ export default {
         if (image[0] == null || image[0] == ''){
           StudentService.editStudent(this.student, this.studentid)
             .then((response) => {
+              GStore.currentUser.student = response.data.data.editStudent
             this.$router.push({
               name: 'StProfilePage',
               params: { id: response.data.data.editStudent.id }
@@ -81,6 +83,7 @@ export default {
         this.student.profileImg = image[0]
         StudentService.editStudent(this.student, this.studentid)
         .then((response) => {
+          GStore.currentUser.student = response.data.data.editStudent
           this.$router.push({
               name: 'StProfilePage',
               params: { id: response.data.data.editStudent.id }

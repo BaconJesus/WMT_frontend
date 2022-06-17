@@ -81,6 +81,7 @@ export default {
                 id
                 description
                 profileImg
+                active
                 students{
                     id
                     profileImg
@@ -179,6 +180,54 @@ export default {
 
         const graphql = {
             query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    deleteTutor(id) {
+        const mutation = `
+        mutation($id:Int){
+            deleteTutor(id:$id){
+                id
+                active
+                user{
+                    firstname
+                    lastname
+                    displayname
+                }
+            }
+        }
+        `
+        const variable = {
+            id: id
+        }
+
+        const graphql = {
+            query: mutation,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    undeleteTutor(id) {
+        const mutation = `
+        mutation($id:Int){
+            undeleteTutor(id:$id){
+                id
+                active
+                user{
+                    firstname
+                    lastname
+                    displayname
+                }
+            }
+        }
+        `
+        const variable = {
+            id: id
+        }
+
+        const graphql = {
+            query: mutation,
             variables: variable
         }
         return graphqlClient(graphql)

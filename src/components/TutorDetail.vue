@@ -1,7 +1,9 @@
 <template>
     
   <!-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> -->
-
+    <div v-if="!tutor.active" class="gap-4 pd-auto bg-red-300 h-[40px] px-4 md:flex items-center justify-items-center">
+        <p class="text-center w-full text-2xl">This user is restricted</p>
+    </div>
   <div class="overflow-y-scroll bg-white">
     <div class="container mx-auto my-5 p-5 w-[1200px]">
       <div class="md:flex no-wrap md:-mx-2 ">
@@ -23,6 +25,14 @@
           <div v-if="GStore.currentUser.tutor">
            <router-link v-if="GStore.currentUser.tutor.id === tutor.id" :to="{ name: 'EditTutor', params: { id: tutor.id } }"
            class="mx-auto px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded w-[200px] flex text-center justify-center">Edit</router-link>
+          </div>
+                    <div v-if="isAdmin && tutor.active">
+           <div class="mx-auto px-3 py-2 text-sm text-white bg-red-600 rounded w-[200px] flex text-center justify-center cursor-pointer"
+           @click="restrict(tutor.id)">Restrict</div>
+          </div>
+          <div v-if="isAdmin && !tutor.active">
+           <div class="mx-auto px-3 py-2 text-sm text-white bg-green-600 rounded w-[200px] flex text-center justify-center cursor-pointer"
+           @click="unrestrict(tutor.id)">Unrestrict</div>
           </div>
           <!-- Student list  -->
           <div class="bg-white p-3 hover:shadow">
@@ -141,7 +151,8 @@
 
 </template>
 <script>
-
+import AuthService from "@/services/AuthService";
+import TutorService from '@/services/TutorService'
 export default {
   name: "TutorDetail",
   inject: ['GStore'],
@@ -151,10 +162,35 @@ export default {
       required: true
     }
   },
+  computed:{
+    isAdmin(){
+      return AuthService.hasRoles('ROLE_ADMIN');
+    }
+  },
   data() {
     return {
       icon: require("@/assets/icon.png"),
     };
   },
+  methods:{
+    restrict(id){
+        if(confirm("Are you sure you want to restrict this user?")){
+        TutorService.deleteTutor(id).then(() =>{
+            alert("This tutor is now restricted")
+            this.$router.push({ name: "TutorNameList" });
+        }
+        )
+        }
+    },
+    unrestrict(id){
+        if(confirm("Are you sure you want to return this user?")){
+        TutorService.undeleteTutor(id).then(() =>{
+            alert("This tutor is now unrestricted")
+            this.$router.push({ name: "TutorNameList" });
+        }
+        )
+        }
+    }
+  }
 };
 </script>

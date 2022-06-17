@@ -82,6 +82,7 @@ import CategoryService from '@/services/CategoryService'
 import CategorySelection from '@/components/CategorySelection.vue'
 import SubjectService from '@/services/SubjectService'
 import SubjectSelection from '@/components/SubjectSelection.vue'
+import GStore from '@/store'
 export default {
   inject: ['GStore'],
   name: "CreateTutorProfile",
@@ -115,6 +116,7 @@ export default {
         if (image[0] == null || image[0] == ''){
           TutorService.editTutor(this.tutor, this.tutorid)
             .then((response) => {
+              GStore.currentUser.tutor = response.data.data.editTutor
             this.$router.push({
               name: 'StProfilePage',
               params: { id: response.data.data.editTutor.id }
@@ -124,6 +126,7 @@ export default {
         this.tutor.profileImg = image[0]
         TutorService.editTutor(this.tutor, this.tutorid)
         .then((response) => {
+          GStore.currentUser.tutor = response.data.data.editTutor
           this.$router.push({
               name: 'StProfilePage',
               params: { id: response.data.data.editTutor.id }

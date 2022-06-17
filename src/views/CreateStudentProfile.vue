@@ -43,6 +43,7 @@
 import UploadImages from 'vue-upload-drop-images'
 import StudentService from '@/services/StudentService'
 import UploadService from '@/services/UploadService'
+import GStore from '@/store'
 export default {
   inject: ['GStore'],
   name: "CreateStudentProfile",
@@ -69,6 +70,7 @@ export default {
         this.student.profileImg = image[0]
         StudentService.createStudent(this.student, this.userid)
         .then((response) => {
+          GStore.currentUser.student = response.data.data.createStudent
           this.$router.push({
               name: 'StProfilePage',
               params: { id: response.data.data.createStudent.id }

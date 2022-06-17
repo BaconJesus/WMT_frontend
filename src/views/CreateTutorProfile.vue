@@ -73,6 +73,7 @@
 
 <script>
 import PrefSelection from '@/components/PrefSelection.vue'
+import GStore from '@/store'
 import UploadImages from 'vue-upload-drop-images'
 import TutorService from '@/services/TutorService'
 import UploadService from '@/services/UploadService'
@@ -111,6 +112,7 @@ export default {
         this.tutor.profileImg = image[0]
         TutorService.createTutor(this.tutor, this.userid)
         .then((response) => {
+           GStore.currentUser.tutor = response.data.data.createTutor
           this.$router.push({
               name: 'ProfilePage',
               params: { id: response.data.data.createTutor.id }
