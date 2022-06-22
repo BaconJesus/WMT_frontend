@@ -118,7 +118,7 @@ export default {
             .then((response) => {
               GStore.currentUser.tutor = response.data.data.editTutor
             this.$router.push({
-              name: 'StProfilePage',
+              name: 'ProfilePage',
               params: { id: response.data.data.editTutor.id }
             })
         })
@@ -128,7 +128,7 @@ export default {
         .then((response) => {
           GStore.currentUser.tutor = response.data.data.editTutor
           this.$router.push({
-              name: 'StProfilePage',
+              name: 'ProfilePage',
               params: { id: response.data.data.editTutor.id }
             })
         })
