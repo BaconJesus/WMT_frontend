@@ -1,31 +1,30 @@
 <template>
-
-<StudentDetail v-if="student" :student="student"/>
+<TutorDetail v-if="tutor" :tutor="tutor"/>
 </template>
 
+
 <script>
-import StudentService from '@/services/StudentService'
-import StudentDetail from '@/components/StudentDetail.vue'
+import TutorService from '@/services/TutorService'
+import TutorDetail from '@/components/TutorDetail.vue'
 export default {
   inject: ['GStore'],
-  name: "StProfilePage",
+  name: "ProfilePage",
   components:{
-    StudentDetail
+    TutorDetail
   },
   data() {
     return {
-      student: null,
+      tutor: null,
       studentid: null,
       icon: require("@/assets/icon.png"),
     };
   },
   // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
-    StudentService.getStudent(routeTo.params.id)
+    TutorService.getTutor(routeTo.params.id)
     .then((response) => {
           next((comp) => {
-          comp.studentid = routeTo.params.id;
-          comp.student = response.data.data.getStudent
+          comp.tutor = response.data.data.getTutor
         })
     })      
   },

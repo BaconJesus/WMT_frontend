@@ -10,8 +10,10 @@
 <!--        upload-->
         <div class="max-w-2xl rounded-lg shadow-sm bg-white">
           <div class="m-4">
-            <label class="flex justify-center inline-block mb-2 font-xl text-gray-900 text-3xl">Create Profile </label>
+            <label class="flex justify-center inline-block mb-2 font-xl text-gray-900 text-3xl">Edit Profile </label>
             <div class="flex items-center justify-center w-full">
+              <img v-if="student.profileImg" :src="student.profileImg" class="h-[300px] w-[300px]"/>
+              <img v-else :src="icon" class="h-[300px] w-[300px]"/>
               <UploadImages :max="1" @changed="handleImage" />
             </div>
           </div>
@@ -46,7 +48,7 @@ import UploadService from '@/services/UploadService'
 import GStore from '@/store'
 export default {
   inject: ['GStore'],
-  name: "CreateStudentProfile",
+  name: "EditStudentProfile",
   components: {
     UploadImages
   },
@@ -57,7 +59,8 @@ export default {
         profileImg: '', 
       },
       files: [],
-      userid: null,
+      icon: require("@/assets/icon.png"),
+      studentid: null,
     }
   },
   methods: {
@@ -66,16 +69,27 @@ export default {
           return UploadService.uploadFile(file)
         }))
       .then((response) =>{
-        var image = response.map((r) => r.data)       
-        this.student.profileImg = image[0]
-        StudentService.createStudent(this.student, this.userid)
-        .then((response) => {
-          GStore.currentUser.student = response.data.data.createStudent
-          this.$router.push({
+        var image = response.map((r) => r.data)
+        if (image[0] == null || image[0] == ''){
+          StudentService.editStudent(this.student, this.studentid)
+            .then((response) => {
+              GStore.currentUser.student = response.data.data.editStudent
+            this.$router.push({
               name: 'StProfilePage',
-              params: { id: response.data.data.createStudent.id }
+              params: { id: response.data.data.editStudent.id }
             })
         })
+        } else{      
+        this.student.profileImg = image[0]
+        StudentService.editStudent(this.student, this.studentid)
+        .then((response) => {
+          GStore.currentUser.student = response.data.data.editStudent
+          this.$router.push({
+              name: 'StProfilePage',
+              params: { id: response.data.data.editStudent.id }
+            })
+        })
+        }
       })
     },
     handleImage(file){
@@ -84,9 +98,14 @@ export default {
   },
    // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
-        next((comp) => {
-          comp.userid = routeTo.params.id;
-          console.log(comp.userid)
+    StudentService.getStudent(parseInt(routeTo.params.id))
+        .then((response) => {
+          next((comp) => {
+            console.log(response.data.data.getStudent)
+            comp.student.description = response.data.data.getStudent.description;
+            comp.student.profileImg = response.data.data.getStudent.profileImg;
+            comp.studentid = response.data.data.getStudent.id
+          })
         })
   },
 }

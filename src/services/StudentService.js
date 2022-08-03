@@ -1,12 +1,12 @@
 import graphqlClient from "./GraphQLClient.js";
 
 export default {
-    getTutors(pageNo, pageSize) {
+    getStudents(pageNo, pageSize) {
         const query = `
         query($query:QueryFilter){
-            getTutors(queryFilter:$query){
-                totalElements
-                content{
+            getStudents(queryFilter:$query){
+            totalElements
+            content{
                     id
                     profileImg
                     user{
@@ -31,29 +31,13 @@ export default {
         }
         return graphqlClient(graphql)
     },
-    createTutor(tutor, id) {
+    createStudent(student, id) {
         const mutation = `
-        mutation($tutor:InputTutor, $userid:Int){
-            createTutor(tutor:$tutor, userid:$userid){
+        mutation($student:InputStudent, $userid:Int){
+            createStudent(student:$student, userid:$userid){
                 id
                 profileImg
                 description
-                students{
-                    user{
-                        firstname
-                        lastname
-                        displayname
-                    }
-                }
-                subjects{
-                    name
-                    category{
-                        name
-                    }
-                }
-                preferences{
-                    name
-                }
                 user{
                     firstname
                     lastname
@@ -64,7 +48,7 @@ export default {
         }
         `
         const variable = {
-            tutor: tutor,
+            student: student,
             userid: id
         }
 
@@ -74,33 +58,20 @@ export default {
         }
         return graphqlClient(graphql)
     },
-    getTutor(id) {
+    getStudent(theid) {
         const query = `
         query($id:Int){
-            getTutor(id:$id){
+            getStudent(id:$id){
                 id
                 description
                 profileImg
                 active
-                students{
-                    id
-                    profileImg
+                tutors{
                     user{
                         firstname
                         lastname
                         displayname
                     }
-                }
-                subjects{
-                    id
-                    name
-                    category{
-                        name
-                    }
-                }
-                preferences{
-                    id
-                    name
                 }
                 user{
                     firstname
@@ -112,7 +83,7 @@ export default {
         }
         `
         const variable = {
-            id: id
+            id: theid
         }
 
         const graphql = {
@@ -121,34 +92,38 @@ export default {
         }
         return graphqlClient(graphql)
     },
-    editTutor(tutor, id) {
-        const mutation = `
-        mutation($tutor:InputTutor, $id:Int){
-            editTutor(tutor:$tutor, id:$id){
-                id
+    getUpdatedProfilePic(id) {
+        const query = `
+        query($id:Int){
+            getStudent(id:$id){
                 profileImg
-                description
-                students{
-                    user{
-                        firstname
-                        displayname
-                        displayname
-                    }
-                }
-                subjects{
-                    name
-                    category{
-                        name
-                    }
-                }
-                preferences{
-                    name
-                }
             }
         }
         `
         const variable = {
-            tutor: tutor,
+            query: {
+                id: id
+            }
+        }
+
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    editStudent(student, id) {
+        const mutation = `
+        mutation($student:InputStudent, $id:Int){
+            editStudent(student:$student, id:$id){
+                id
+                profileImg
+                description
+            }
+        }
+        `
+        const variable = {
+            student: student,
             id: id
         }
 
@@ -158,36 +133,10 @@ export default {
         }
         return graphqlClient(graphql)
     },
-    getTutorToEdit(id) {
-        const query = `
-        query($id:Int){
-            getTutor(id:$id){
-                id
-                description
-                profileImg
-                subjects{
-                    id
-                }
-                preferences{
-                    id
-                }
-            }
-        }
-        `
-        const variable = {
-            id: id
-        }
-
-        const graphql = {
-            query: query,
-            variables: variable
-        }
-        return graphqlClient(graphql)
-    },
-    deleteTutor(id) {
+    deleteStudent(id) {
         const mutation = `
         mutation($id:Int){
-            deleteTutor(id:$id){
+            deleteStudent(id:$id){
                 id
                 active
                 user{
@@ -208,10 +157,10 @@ export default {
         }
         return graphqlClient(graphql)
     },
-    undeleteTutor(id) {
+    undeleteStudent(id) {
         const mutation = `
         mutation($id:Int){
-            undeleteTutor(id:$id){
+            undeleteStudent(id:$id){
                 id
                 active
                 user{

@@ -1,21 +1,38 @@
 <template>
-
-  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-
-  <div class="bg-white">
-    <div class="container mx-auto my-5 p-5">
+    
+  <!-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> -->
+    <div v-if="!tutor.active" class="gap-4 pd-auto bg-red-300 h-[40px] px-4 md:flex items-center justify-items-center">
+        <p class="text-center w-full text-2xl">This user is restricted</p>
+    </div>
+  <div class="overflow-y-scroll bg-white">
+    <div class="container mx-auto my-5 p-5 w-[1200px]">
       <div class="md:flex no-wrap md:-mx-2 ">
         <!-- Left -->
         <div class="w-full md:w-3/12 md:mx-2">
           <!-- Profile Card -->
           <div class="bg-white p-3 border-t-4 border-sky-400">
             <div class="image overflow-hidden">
-              <div class="h-auto w-full mx-auto rounded-lg">
+              <div class="h-auto w-full mx-auto rounded-lg" v-if="!tutor.profileImg">
               <img :src="icon" />
             </div>
+            <div class="h-auto w-full mx-auto rounded-lg" v-else>
+              <img :src="tutor.profileImg" class="h-[300px] w-[300px]"/>
             </div>
-            <h1 class="name text-gray-900 font-bold text-xl leading-8 my-1">Name Surname</h1>
-            <h1 class="rating text-gray-900 font-bold text-xl leading-8 my-1">Rating 4.8⭐</h1>
+            </div>
+            <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1" v-if="tutor">{{tutor.user.firstname}} {{tutor.user.lastname}}</h1>
+            
+          </div>
+          <div v-if="GStore.currentUser.tutor">
+           <router-link v-if="GStore.currentUser.tutor.id === tutor.id" :to="{ name: 'EditTutor', params: { id: tutor.id } }"
+           class="mx-auto px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded w-[200px] flex text-center justify-center">Edit</router-link>
+          </div>
+                    <div v-if="isAdmin && tutor.active">
+           <div class="mx-auto px-3 py-2 text-sm text-white bg-red-600 rounded w-[200px] flex text-center justify-center cursor-pointer"
+           @click="restrict(tutor.id)">Restrict</div>
+          </div>
+          <div v-if="isAdmin && !tutor.active">
+           <div class="mx-auto px-3 py-2 text-sm text-white bg-green-600 rounded w-[200px] flex text-center justify-center cursor-pointer"
+           @click="unrestrict(tutor.id)">Unrestrict</div>
           </div>
           <!-- Student list  -->
           <div class="bg-white p-3 hover:shadow">
@@ -30,29 +47,16 @@
               <span>Student list</span>
             </div>
             <div class="grid grid-cols-3">
-              <div class="text-center my-2">
+              <div class="text-center my-2" v-for="items in tutor.students" :key="items.id">
+                <img class="h-16 w-16 rounded-full mx-auto"
+                     :src="items.profileImg"
+                     alt=""
+                     v-if="items.profileImg" />
                 <img class="h-16 w-16 rounded-full mx-auto"
                      :src="icon"
-                     alt="">
-                <a href="#" class="text-main-color">name1</a>
-              </div>
-              <div class="text-center my-2">
-                <img class="h-16 w-16 rounded-full mx-auto"
-                     :src="icon"
-                     alt="">
-                <a href="#" class="text-main-color">name2</a>
-              </div>
-              <div class="text-center my-2">
-                <img class="h-16 w-16 rounded-full mx-auto"
-                     :src="icon"
-                     alt="">
-                <a href="#" class="text-main-color">name3</a>
-              </div>
-              <div class="text-center my-2">
-                <img class="h-16 w-16 rounded-full mx-auto"
-                     :src="icon"
-                     alt="">
-                <a href="#" class="text-main-color">name4</a>
+                     alt=""
+                     v-else />
+                <a href="#" class="text-main-color">{{items.user.displayname}}</a>
               </div>
             </div>
           </div>
@@ -72,12 +76,10 @@
                         </span>
               <span class="tracking-wide">About</span>
             </div>
-            <div class="text-gray-700">
+            <div class="text-gray-700 h-[100px]">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
-                  <div class="description px-4 py-2 ">Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.
-                    Reprehenderit, eligendi dolorum sequi illum qui unde aspernatur non deserunt</div>
+                  <div class="description px-4 py-2 ">{{tutor.description}}</div>
 <!--                </div>-->
               </div>
             </div>
@@ -102,11 +104,8 @@
                   <span class="tracking-wide">Preference</span>
                 </div>
                 <ul class="list-inside space-y-2">
-                  <li>
-                    <div class="preference text-teal-600">Preference1</div>
-                  </li>
-                  <li>
-                    <div class="preference text-teal-600">Preference2</div>
+                  <li v-for="items in tutor.preferences" :key="items.name">
+                    <div class="preference text-teal-600">{{items.name}}</div>
                   </li>
                 </ul>
               </div>
@@ -125,11 +124,8 @@
                   <span class="tracking-wide">Subject</span>
                 </div>
                 <ul class="list-inside space-y-2">
-                  <li>
-                    <div class="subject text-teal-600">Science</div>
-                  </li>
-                  <li>
-                    <div class="subject text-teal-600">Math</div>
+                  <li v-for="items in tutor.subjects" :key="items.name">
+                    <div class="subject text-teal-600">{{items.name}}</div>
                   </li>
                 </ul>
               </div>
@@ -137,7 +133,7 @@
             <!-- End of Subject, preferrence -->
           </div>
           <!--        comment box-->
-          <div class="max-w-lg shadow-md ">
+          <!-- <div class="max-w-lg shadow-md ">
             <form action="" class="w-full p-4 ">
               <div class="mb-2">
                 <label for="comment" class="text-lg text-gray-600">Add Review</label>
@@ -146,42 +142,55 @@
               </div>
               <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
             </form>
-          </div>
+          </div> -->
         </div>
 
       </div>
     </div>
   </div>
 
-
 </template>
-
 <script>
+import AuthService from "@/services/AuthService";
+import TutorService from '@/services/TutorService'
 export default {
-  name: "ProfilePage",
+  name: "TutorDetail",
+  inject: ['GStore'],
+  props: {
+    tutor: {
+      type: Object,
+      required: true
+    }
+  },
+  computed:{
+    isAdmin(){
+      return AuthService.hasRoles('ROLE_ADMIN');
+    }
+  },
   data() {
     return {
       icon: require("@/assets/icon.png"),
     };
   },
-}
+  methods:{
+    restrict(id){
+        if(confirm("Are you sure you want to restrict this user?")){
+        TutorService.deleteTutor(id).then(() =>{
+            alert("This tutor is now restricted")
+            this.$router.push({ name: "TutorNameList" });
+        }
+        )
+        }
+    },
+    unrestrict(id){
+        if(confirm("Are you sure you want to return this user?")){
+        TutorService.undeleteTutor(id).then(() =>{
+            alert("This tutor is now unrestricted")
+            this.$router.push({ name: "TutorNameList" });
+        }
+        )
+        }
+    }
+  }
+};
 </script>
-
-<style scoped>
-:root {
-  --main-color: #4a76a8;
-}
-
-.bg-main-color {
-  background-color: var(--main-color);
-}
-
-.text-main-color {
-  color: var(--main-color);
-}
-
-.border-main-color {
-  border-color: var(--main-color);
-}
-</style>
-

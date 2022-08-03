@@ -19,9 +19,8 @@
     </div> -->
       <div class="flex flex-wrap flex-row mx-4 text-center">
         <ProfileCard v-for="item in tutors" :key="item.id" :tutor="item"/>
-      </div>
-      <div class="pagination">
-      <router-link
+        <div class="flex h-screen fixed left-0 text-center pd-[20px] mx-4 items-center">
+        <router-link
         id="page-prev"
         :to="{ name: 'TutorList', query: { page: page - 1 } }"
         rel="prev"
@@ -29,8 +28,10 @@
       >
         Prev Page</router-link
       >
-
+        </div>
+      <div class="flex h-screen fixed right-0 text-center pd-[20px] mx-4 items-center">
       <router-link
+      
         id="page-next"
         :to="{ name: 'TutorList', query: { page: page + 1 } }"
         rel="next"
@@ -38,9 +39,11 @@
       >
         Next Page</router-link
       >
+      </div>
+      </div>
+      
     </div>
   </div>
-</div>
 
 </template>
 
@@ -60,12 +63,12 @@ export default {
   data() {
     return {
       tutors: null,
-      totalEvents: 0
+      totalElements: 0
     }
   },
   // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
-    TutorService.getTutors(parseInt(routeTo.query.page) || 1,9)
+    TutorService.getTutors(parseInt(routeTo.query.page) || 1,3)
       .then((response) => {
         next((comp) => {
           comp.tutors = response.data.data.getTutors.content;
@@ -73,9 +76,15 @@ export default {
         })
       })
   },
+   beforeRouteUpdate(routeTo) {
+   TutorService.getTutors(parseInt(routeTo.query.page) || 1,3).then((response) => {
+        this.tutors = response.data.data.getTutors.content // <-----
+        this.totalElements = response.data.data.getTutors.totalElements; // <-----
+      })
+    },
   computed: {
     hasNextPage() {
-      let totalPages = Math.ceil(this.totalElements / 9) // 2 is events per page
+      let totalPages = Math.ceil(this.totalElements / 3)
       return this.page < totalPages
     }
   }
