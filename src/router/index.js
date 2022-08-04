@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 import TutorList from "@/views/TutorList";
+// import SearchTutorByName from "@/views/TutorSearchedList";
 import LoginForm from "@/views/LoginForm";
 import RegisterForm from "@/views/RegisterForm";
 import browse from "@/components/browse";
@@ -19,7 +20,13 @@ import GStore from '@/store'
 
 const routes = [
     { path: "/", name: "HomePage", component: Home },
-    { path: "/tutorlist", name: "TutorList", component: TutorList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
+    {
+        path: "/tutorlist",
+        name: "TutorList",
+        component: TutorList,
+        props: (route) => ({ page: parseInt(route.query.page) || 1, name: route.query.name || '' })
+    },
+    // { path: "/tutorname", name: "SearchTutorByName", component: SearchTutorByName, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     { path: "/login", name: "LoginPage", component: LoginForm },
     { path: "/regcheck", name: "RegisterCheck", component: RegisterAs },
     { path: "/register/:role", name: "RegisterPage", component: RegisterForm },

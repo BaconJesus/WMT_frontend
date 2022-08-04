@@ -232,4 +232,35 @@ export default {
         }
         return graphqlClient(graphql)
     },
+    searchByName(name, pageNo, pageSize) {
+        const query = `
+        query($query:QueryFilter, $name:String){
+            getMatchTutorPaginationByName(queryFilter:$query, name:$name){
+                totalElements
+                content{
+                    id
+                    profileImg
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+            }
+        }
+        `
+        const variable = {
+            query: {
+                pageNo: pageNo,
+                pageSize: pageSize
+            },
+            name: name
+        }
+
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
 }
