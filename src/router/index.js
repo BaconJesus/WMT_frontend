@@ -5,6 +5,7 @@ import TutorListPrefered from "@/views/TutorListPrefered";
 import LoginForm from "@/views/LoginForm";
 import RegisterForm from "@/views/RegisterForm";
 import browse from "@/components/browse";
+import RequestDetails from "@/views/RequestDetails"
 import ProfilePage from "@/views/ProfilePage";
 import CreateTutorProfile from "@/views/CreateTutorProfile";
 import CreateStudentProfile from "@/views/CreateStudentProfile";
@@ -56,6 +57,7 @@ const routes = [
     { path: "/createstudent/:id", name: 'CreateStudent', component: CreateStudentProfile },
     { path: "/noprof", name: 'NoProfile', component: NoProfile },
     { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage },
+    { path: "/request/:id", name: "RequestDetails", component: RequestDetails },
     { path: "/tutornamelist", name: "TutorNameList", component: TutorNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     { path: "/studentnamelist", name: "StudentNameList", component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     { path: "/editstudent/:id", name: 'EditStudent', component: EditStudent },
