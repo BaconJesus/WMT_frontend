@@ -13,6 +13,11 @@
          {{ items.title }}
         </router-link>
         </span>
+      <span v-if="isStudent" class="flex gap-x-4">
+        <router-link v-for="items in studentItems" :key="items.title" :to="items.path" class="text-white text-lg">
+         {{ items.title }}
+        </router-link>
+        </span>
         </div>
       </div>
     <div class="flex col-end-2 h-[55px]">
@@ -57,8 +62,7 @@
     </div>
 </template>
 <script>
-import { navItems } from "@/constants/navItems";
-import { adminItems } from "@/constants/adminItems";
+import { navItems, adminItems, studentItems } from "@/constants/navItems";
 import BellIcon from "@/components/BellIcon";
 import AuthService from "@/services/AuthService";
 export default {
@@ -67,7 +71,7 @@ export default {
   data() {
     return {
       isNavOpen: false,
-      navItems, adminItems,
+      navItems, adminItems, studentItems,
       icon: require("@/assets/icon.png"),
       pending: 0
     };
@@ -78,6 +82,9 @@ export default {
     },
     isAdmin(){
       return AuthService.hasRoles('ROLE_ADMIN');
+    },
+    isStudent(){
+      return AuthService.hasRoles('ROLE_STUDENT');
     }
   },
   components: { BellIcon },

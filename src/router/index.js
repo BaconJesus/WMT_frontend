@@ -17,6 +17,7 @@ import StudentNameList from "@/views/StudentNameList";
 import EditStudent from "@/views/EditStudentProfile";
 import EditTutor from "@/views/EditTutorProfile"
 import PreferenceService from "@/services/PreferenceService";
+import RequestSent from "@/views/RequestSent"
 import GStore from '@/store'
 
 const routes = [
@@ -26,6 +27,11 @@ const routes = [
         name: "TutorList",
         component: TutorList,
         props: (route) => ({ page: parseInt(route.query.page) || 1, name: route.query.name || '' })
+    },
+    {
+        path: "/requestsent",
+        name: "RequestSent",
+        component: RequestSent
     },
     {
         path: "/prefered",
