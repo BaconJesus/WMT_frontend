@@ -22,7 +22,7 @@
         <!-- Modal body -->
         <div class="flex-auto w-half relative pd-4">
           <div class="ml-[10px] mr-[10px] pd-4">
-            <RequestCard
+            <RequestCardStudent
               v-for="request in requests"
               :key="request.id"
               :request="request"
@@ -126,12 +126,12 @@
 
 <script>
 import RequestService from "@/services/RequestService";
-import RequestCard from "@/components/RequestCard";
+import RequestCardStudent from "@/components/RequestCardStudent";
 import GStore from "@/store";
 
 export default {
   name: "RequestSent",
-  components: { RequestCard },
+  components: { RequestCardStudent },
   data() {
     return {
       count: 0,

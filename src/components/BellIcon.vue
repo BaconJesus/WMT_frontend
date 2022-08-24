@@ -216,15 +216,12 @@ export default {
     
   },
   // eslint-disable-next-line no-unused-vars
-  beforeRouteUpdate(routeTo, routeFrom, next) {
-    this.$forceUpdate()
+  beforeUpdate(routeTo) {
     RequestService.getPendingRequestTutor(this.reqpage, 3, this.tutor.id)
     .then((response) => {
-      next((comp) => {
-        comp.count = response.data.data.getRequestsTutorSide.totalElements;
-        comp.requests = response.data.data.getRequestsTutorSide.content;
+        this.count = response.data.data.getRequestsTutorSide.totalElements;
+        this.requests = response.data.data.getRequestsTutorSide.content;
       });
-    });
   },
   computed: {
     hasNextPage() {

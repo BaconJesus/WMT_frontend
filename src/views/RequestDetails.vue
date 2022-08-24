@@ -55,7 +55,7 @@
 <!--                </div>-->
               </div>
             </div>
-            <div  class="text-white" v-if="request.status == 'Pending'">
+            <div  class="text-white" v-if="GStore.currentUser.tutor">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
                   <button @click="accept" class="rounded mx-2 bg-green-500 description px-4 py-2 ">Accept</button>
@@ -280,11 +280,16 @@ export default {
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
     RequestService.getRequestReceived(routeTo.params.id)
-    .then((response) => {
+    .then((response) => {      
           next((comp) => {
           comp.request = response.data.data.getRequest
         })
     })      
+  },
+  beforeRouteUpdate(routeTo) {
+    RequestService.getRequestReceived(routeTo.params.id).then((response) => {
+      this.request = response.data.data.getRequest;
+    });
   },
   methods:{
     accept(){
