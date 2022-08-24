@@ -60,4 +60,17 @@ export default {
             return false
         }
     },
+    hasTutor(id) {
+        if (GStore.currentUser && id) {
+            let setTutors = []
+            for (var x = 0; x < GStore.currentUser.student.tutors.length; x++) {
+                setTutors.push(GStore.currentUser.student.tutors[x].id)
+            }
+            let containTutors = setTutors.includes(id)
+
+            return containTutors
+        } else {
+            return false
+        }
+    },
 }

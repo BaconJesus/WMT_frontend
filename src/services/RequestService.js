@@ -42,13 +42,22 @@ export default {
             getRequest(requestid:$requestid){
                     id
                     message
+                    reply
+                    tutor{
+                        profileImg
+                        user{
+                            firstname
+                            lastname
+                            displayname
+                        }
+                    }
                     student{
                         profileImg
-                    user{
-                        firstname
-                        lastname
-                        displayname
-                    }
+                        user{
+                            firstname
+                            lastname
+                            displayname
+                        }
                 }
             }
         }
@@ -119,6 +128,78 @@ export default {
                 id: id,
                 reply: reply
             }
+        }
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    sendRequest(tutorid, studentid, text) {
+        const query = `
+        mutation($tutorid:Int, $studentid:Int, $request:SendRequest){
+            sendRequest(tutorid:$tutorid, studentid:$studentid, request:$request){
+                message
+                reply
+                status
+                student{
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+                tutor{
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+            }
+        }
+        `
+        const variable = {
+            tutorid: tutorid,
+            studentid: studentid,
+            request: {
+                message: text
+            }
+        }
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    getRequestStudent(pageNo, pageSize, id) {
+        const query = `
+        query($query:QueryFilter, $studentid:Int){
+            getRequestsStudentSide(queryFilter:$query, studentid:$studentid){
+                totalElements
+                content{
+                    id
+                    message
+                    reply
+                    status
+                    tutor{
+                        profileImg
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+                }
+            }
+        }
+        `
+        const variable = {
+            query: {
+                pageNo: pageNo,
+                pageSize: pageSize
+            },
+            studentid: id
         }
         const graphql = {
             query: query,

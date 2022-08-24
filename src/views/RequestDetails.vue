@@ -9,10 +9,9 @@
       ]">
       <div class="md:flex no-wrap md:-mx-2 ">
         <!-- Left -->
-        <!-- {{student}} -->
         <div class="w-full md:w-3/12 md:mx-2">
           <!-- Profile Card -->
-          <div class="bg-white p-3 border-t-4 border-sky-400">
+          <div class="bg-white p-3 border-t-4 border-sky-400" v-if="GStore.currentUser.tutor">
             <div class="image overflow-hidden">
               <div class="h-auto w-full mx-auto rounded-lg" v-if="!request.student.profileImg" >
               <img :src="icon" />
@@ -21,8 +20,20 @@
               <img :src="request.student.profileImg" class="h-[300px] w-[300px]"/>
             </div>
             </div>
-            <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1">{{request.student.user.displayname}}
+            <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1" v-if="GStore.currentUser.tutor">{{request.student.user.displayname}}
               <br>({{request.student.user.firstname}} {{request.student.user.lastname}})</h1>
+          </div>
+          <div class="bg-white p-3 border-t-4 border-sky-400" v-if="GStore.currentUser.student">
+            <div class="image overflow-hidden">
+              <div class="h-auto w-full mx-auto rounded-lg" v-if="!request.tutor.profileImg" >
+              <img :src="icon" />
+            </div>
+            <div class="h-auto w-full mx-auto rounded-lg" v-else>
+              <img :src="request.tutor.profileImg" class="h-[300px] w-[300px]"/>
+            </div>
+            </div>
+            <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1" v-if="GStore.currentUser.student">{{request.tutor.user.displayname}}
+              <br>({{request.tutor.user.firstname}} {{request.tutor.user.lastname}})</h1>
          
           </div>
           <!-- Student list  -->
@@ -44,18 +55,33 @@
 <!--                </div>-->
               </div>
             </div>
-            <div  class="text-white">
+            <div  class="text-white" v-if="request.status == 'Pending'">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
                   <button @click="accept" class="rounded mx-2 bg-green-500 description px-4 py-2 ">Accept</button>
                   <button @click="reject" class="rounded mx-2 bg-red-500 description px-4 py-2 ">Reject</button>
 <!--                </div>-->
               </div>
+              
             </div>
+            <div  v-else>
+              <div class="text-gray-700 h-[300px]">
+                <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8"> 
+              <span class="tracking-wide">Reply from the tutor</span>
+            </div>
+            <div class="text-gray-700 h-[300px]">
+              <div class="grid md:grid-cols-2 text-sm">
+<!--                <div class="grid grid-cols-2">-->
+                  <div class="description px-4 py-2 ">{{request.reply}}</div>
+<!--                </div>-->
+              </div>
+              </div>
           </div>
           <!-- End about -->
       </div>
     </div>
+        </div>
+      </div>
   </div>
   <!-- Modal -->
     <div
@@ -232,6 +258,14 @@ export default {
         id: null,
 	message: null,
   reply: null,
+  tutor: {
+	profileImg: null,
+	user :{
+			firstname: null,
+				lastname: null,
+				displayname: null
+		}
+      },
 	student: {
 	profileImg: null,
 	user :{
@@ -272,14 +306,12 @@ export default {
       if(this.acceptance){
       RequestService.acceptRequest(this.repl, this.request.id).then(() => {
         this.$router.replace('/tutorlist')
-        location.reload()
       })
       }
       
       if(this.refusal){
         RequestService.refuseRequest(this.repl, this.request.id).then(() => {
         this.$router.replace('/tutorlist')
-        location.reload()
       })
       }
     }
