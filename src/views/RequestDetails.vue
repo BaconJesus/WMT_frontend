@@ -1,7 +1,7 @@
 <template>
     
   <!-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> -->
-  <div class="overflow-y-scroll bg-white" >
+  <div class="overflow-y-scroll bg-white h-screen" >
     <div :class="[
         (!showModal && 'container mx-auto my-5 p-5 w-[1200px]') ||
           (showModal &&

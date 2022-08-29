@@ -82,6 +82,8 @@ export default {
                 description
                 profileImg
                 active
+                overallRating
+                rewardPoints
                 students{
                     id
                     profileImg
@@ -89,6 +91,15 @@ export default {
                         firstname
                         lastname
                         displayname
+                    }
+                }
+                reviews{
+                    description
+                    rating
+                    student{
+                        user{
+                            displayname
+                        }
                     }
                 }
                 subjects{

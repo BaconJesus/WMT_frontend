@@ -61,7 +61,7 @@ export default {
         }
     },
     hasTutor(id) {
-        if (GStore.currentUser && id) {
+        if (GStore.currentUser.student && id) {
             let setTutors = []
             for (var x = 0; x < GStore.currentUser.student.tutors.length; x++) {
                 setTutors.push(GStore.currentUser.student.tutors[x].id)
@@ -73,4 +73,17 @@ export default {
             return false
         }
     },
+    hasReviewed(review) {
+        if (GStore.currentUser.student && review) {
+            let setReviews = []
+            for (var x = 0; x < review.length; x++) {
+                setReviews.push(review[x].student.id)
+            }
+            let containReviews = setReviews.includes(GStore.currentUser.student.id)
+
+            return containReviews
+        } else {
+            return false
+        }
+    }
 }

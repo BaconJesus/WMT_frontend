@@ -4,7 +4,7 @@
     <div v-if="!tutor.active" class="gap-4 pd-auto bg-red-300 h-[40px] px-4 md:flex items-center justify-items-center">
         <p class="text-center w-full text-2xl">This user is restricted</p>
     </div>
-  <div class="overflow-y-scroll bg-white">
+  <div class="overflow-y-scroll bg-white h-screen">
     <div :class="[
         (!requestModal && 'container mx-auto my-5 p-5 w-[1200px]') ||
           (requestModal &&
@@ -84,10 +84,11 @@
                         </span>
               <span class="tracking-wide">About</span>
             </div>
-            <div class="text-gray-700 h-[100px]">
+            <div class="container overflow-y-scroll h-[350px] text-gray-700">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
-                  <div class="description px-4 py-2 ">{{tutor.description}}</div>
+                  <div class="description px-4 py-2 " v-if="tutor.rewardPoints < 30">{{tutor.description}}</div>
+                  <BBCodeDescription :description="tutor.description" v-else/>
 <!--                </div>-->
               </div>
             </div>
@@ -97,7 +98,7 @@
           <div class="my-4"></div>
 
           <!-- Experience and education -->
-          <div class="bg-white p-3 shadow-sm rounded-sm">
+          <div class="bg-white p-3 shadow-sm rounded-sm h-[150px]">
 
             <div class="grid grid-cols-2">
               <div>
@@ -137,11 +138,27 @@
                   </li>
                 </ul>
               </div>
+              
             </div>
+            
             <!-- End of Subject, preferrence -->
           </div>
+          <div class="grid-cols-2 p-3 w-auto">
+            <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
+                        <span clas="text-green-500">
+                            <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </span>
+              <span class="tracking-wide">Reviews</span>
+            </div>
+                <div>Rating : {{tutor.overallRating}}</div>
+                <ReviewCard v-for="review in tutor.reviews" :key="review.id" :review="review" />
+              </div>
           <!--        comment box-->
-          <!-- <div class="max-w-lg shadow-md ">
+          <div class="max-w-lg shadow-md " v-if="isLegit">
             <form action="" class="w-full p-4 ">
               <div class="mb-2">
                 <label for="comment" class="text-lg text-gray-600">Add Review</label>
@@ -150,7 +167,7 @@
               </div>
               <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
             </form>
-          </div> -->
+          </div>
         </div>
         
 
@@ -296,9 +313,12 @@
 <script>
 import AuthService from "@/services/AuthService";
 import TutorService from '@/services/TutorService';
+import ReviewCard from '@/components/ReviewCard';
 import RequestService from '@/services/RequestService';
+import BBCodeDescription from '@/components/BBCodeDescription';
 export default {
   name: "TutorDetail",
+  components: {ReviewCard, BBCodeDescription},
   inject: ['GStore'],
   props: {
     tutor: {
@@ -313,6 +333,12 @@ export default {
     BeingStudent(){
       return AuthService.hasTutor(this.tutor.id)
     },
+    isLegit(){
+      let rules1 = AuthService.hasRoles('ROLE_STUDENT');
+      let rules2 = !AuthService.hasReviewed(this.tutor.reviews);
+      let rules3 = AuthService.hasTutor(this.tutor.id);
+      return rules1 && rules2 && rules3;
+    }
   },
   data() {
     return {
