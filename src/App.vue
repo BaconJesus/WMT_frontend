@@ -9,7 +9,7 @@
 import AppLayout from "@/layout/AppLayout";
 export default {
   name: "App",
-  components: {AppLayout},
+  components: {AppLayout}
 };
 </script>
 

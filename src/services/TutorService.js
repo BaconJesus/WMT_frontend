@@ -82,6 +82,8 @@ export default {
                 description
                 profileImg
                 active
+                overallRating
+                rewardPoints
                 students{
                     id
                     profileImg
@@ -89,6 +91,15 @@ export default {
                         firstname
                         lastname
                         displayname
+                    }
+                }
+                reviews{
+                    description
+                    rating
+                    student{
+                        user{
+                            displayname
+                        }
                     }
                 }
                 subjects{
@@ -232,4 +243,71 @@ export default {
         }
         return graphqlClient(graphql)
     },
+    searchByName(name, pageNo, pageSize) {
+        const query = `
+        query($query:QueryFilter, $name:String){
+            getMatchTutorPaginationByName(queryFilter:$query, name:$name){
+                totalElements
+                content{
+                    id
+                    profileImg
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+            }
+        }
+        `
+        const variable = {
+            query: {
+                pageNo: pageNo,
+                pageSize: pageSize
+            },
+            name: name
+        }
+
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    },
+    searchByPref(subjId, prefId, pageNo, pageSize) {
+        const query = `
+        query($query:QueryFilter, $preference:InputPreference, $subject:InputSubject){
+            getMatchTutorPaginationByStudentInput(queryFilter:$query, preference:$preference, subject:$subject){
+              totalElements
+                content{
+                    id
+                    profileImg
+                    user{
+                        firstname
+                        lastname
+                        displayname
+                    }
+                }
+            }
+        }
+        `
+        const variable = {
+            query: {
+                pageNo: pageNo,
+                pageSize: pageSize
+            },
+            subject: {
+                id: subjId
+            },
+            preference: {
+                id: prefId
+            }
+        }
+
+        const graphql = {
+            query: query,
+            variables: variable
+        }
+        return graphqlClient(graphql)
+    }
 }

@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "js-bbcode-parser": "^4.0.0",
     "lodash": "^4.17.21",
     "vee-validate": "^4.5.11",
     "vue": "^3.2.37",

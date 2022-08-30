@@ -4,8 +4,12 @@
     <div v-if="!tutor.active" class="gap-4 pd-auto bg-red-300 h-[40px] px-4 md:flex items-center justify-items-center">
         <p class="text-center w-full text-2xl">This user is restricted</p>
     </div>
-  <div class="overflow-y-scroll bg-white">
-    <div class="container mx-auto my-5 p-5 w-[1200px]">
+  <div class="overflow-y-scroll bg-white h-screen">
+    <div :class="[
+        (!requestModal && 'container mx-auto my-5 p-5 w-[1200px]') ||
+          (requestModal &&
+            'container mx-auto my-5 p-5 w-[1200px] opacity-30 transition'),
+      ]">
       <div class="md:flex no-wrap md:-mx-2 ">
         <!-- Left -->
         <div class="w-full md:w-3/12 md:mx-2">
@@ -33,6 +37,10 @@
           <div v-if="isAdmin && !tutor.active">
            <div class="mx-auto px-3 py-2 text-sm text-white bg-green-600 rounded w-[200px] flex text-center justify-center cursor-pointer"
            @click="unrestrict(tutor.id)">Unrestrict</div>
+          </div>
+          <div v-if="!BeingStudent">
+           <div class="mx-auto px-3 py-2 text-sm text-white bg-green-600 rounded w-[200px] flex text-center justify-center cursor-pointer"
+           @click="requestModal = true">Tutoring Request</div>
           </div>
           <!-- Student list  -->
           <div class="bg-white p-3 hover:shadow">
@@ -76,10 +84,11 @@
                         </span>
               <span class="tracking-wide">About</span>
             </div>
-            <div class="text-gray-700 h-[100px]">
+            <div class="container overflow-y-scroll h-[350px] text-gray-700">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
-                  <div class="description px-4 py-2 ">{{tutor.description}}</div>
+                  <div class="description px-4 py-2 " v-if="tutor.rewardPoints < 30">{{tutor.description}}</div>
+                  <BBCodeDescription :description="tutor.description" v-else/>
 <!--                </div>-->
               </div>
             </div>
@@ -89,7 +98,7 @@
           <div class="my-4"></div>
 
           <!-- Experience and education -->
-          <div class="bg-white p-3 shadow-sm rounded-sm">
+          <div class="bg-white p-3 shadow-sm rounded-sm h-[150px]">
 
             <div class="grid grid-cols-2">
               <div>
@@ -129,11 +138,27 @@
                   </li>
                 </ul>
               </div>
+              
             </div>
+            
             <!-- End of Subject, preferrence -->
           </div>
+          <div class="grid-cols-2 p-3 w-auto">
+            <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
+                        <span clas="text-green-500">
+                            <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </span>
+              <span class="tracking-wide">Reviews</span>
+            </div>
+                <div>Rating : {{tutor.overallRating}}</div>
+                <ReviewCard v-for="review in tutor.reviews" :key="review.id" :review="review" />
+              </div>
           <!--        comment box-->
-          <!-- <div class="max-w-lg shadow-md ">
+          <div class="max-w-lg shadow-md " v-if="isLegit">
             <form action="" class="w-full p-4 ">
               <div class="mb-2">
                 <label for="comment" class="text-lg text-gray-600">Add Review</label>
@@ -142,19 +167,158 @@
               </div>
               <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
             </form>
-          </div> -->
+          </div>
         </div>
+        
 
       </div>
     </div>
   </div>
-
+<div
+    v-if="requestModal"
+    id="defaultModal"
+    tabindex="-1"
+    class="
+      overflow-y-auto overflow-x-hidden
+      fixed
+      top-0
+      right-0
+      left-0
+      z-50
+      w-full
+      md:inset-0
+      h-modal
+      md:h-full
+      justify-center
+      items-center
+      flex
+    "
+    aria-modal="true"
+    role="dialog"
+  >
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div
+          class="
+            flex
+            justify-between
+            items-start
+            p-4
+            rounded-t
+            border-b
+            dark:border-gray-600
+          "
+        >
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Attach a message along
+          </h3>
+          <button
+            @click="requestModal = false"
+            type="button"
+            class="
+              text-gray-400
+              bg-transparent
+              hover:bg-gray-200 hover:text-gray-900
+              rounded-lg
+              text-sm
+              p-1.5
+              ml-auto
+              inline-flex
+              items-center
+              dark:hover:bg-gray-600 dark:hover:text-white
+            "
+            data-modal-toggle="defaultModal"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div>
+          <textarea
+              type="search"
+              id="default-search"
+              class="
+                flex-auto
+                w-full
+                p-4
+                text-sm text-gray-900
+                bg-blue-50
+                rounded-lg
+                border border-gray-300
+                focus:ring-blue-500 focus:border-blue-500
+                dark:bg-sky-200
+                dark:border-gray-300
+                dark:placeholder-gray-400
+                dark:text-black
+                dark:focus:ring-blue-500
+                dark:focus:border-blue-500
+              "
+              placeholder="Message"
+              name="message"
+              v-model="message"
+            />
+          </div>
+          <!-- Modal footer -->
+          <div
+            class="
+              flex
+              items-center
+              p-6
+              space-x-2
+              rounded-b
+              border-t border-gray-200
+              dark:border-gray-600
+            "
+          >
+            <button
+              @click="handleRequest(GStore.currentUser.student.id)"
+              data-modal-toggle="defaultModal"
+              type="submit"
+              class="
+                text-white
+                bg-blue-700
+                hover:bg-blue-800
+                focus:ring-4 focus:outline-none focus:ring-blue-300
+                font-medium
+                rounded-lg
+                text-sm
+                px-5
+                py-2.5
+                text-center
+                dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+              "
+            >
+              Send tutoring request
+            </button>
+          </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import AuthService from "@/services/AuthService";
-import TutorService from '@/services/TutorService'
+import TutorService from '@/services/TutorService';
+import ReviewCard from '@/components/ReviewCard';
+import RequestService from '@/services/RequestService';
+import BBCodeDescription from '@/components/BBCodeDescription';
 export default {
   name: "TutorDetail",
+  components: {ReviewCard, BBCodeDescription},
   inject: ['GStore'],
   props: {
     tutor: {
@@ -165,11 +329,22 @@ export default {
   computed:{
     isAdmin(){
       return AuthService.hasRoles('ROLE_ADMIN');
+    },
+    BeingStudent(){
+      return AuthService.hasTutor(this.tutor.id)
+    },
+    isLegit(){
+      let rules1 = AuthService.hasRoles('ROLE_STUDENT');
+      let rules2 = !AuthService.hasReviewed(this.tutor.reviews);
+      let rules3 = AuthService.hasTutor(this.tutor.id);
+      return rules1 && rules2 && rules3;
     }
   },
   data() {
     return {
       icon: require("@/assets/icon.png"),
+      message: '',
+      requestModal: false
     };
   },
   methods:{
@@ -190,6 +365,11 @@ export default {
         }
         )
         }
+    },
+    handleRequest(studentid){
+      RequestService.sendRequest(this.tutor.id, studentid, this.message).then(() =>{
+          this.$router.push({ name: "TutorList" });
+      })
     }
   }
 };

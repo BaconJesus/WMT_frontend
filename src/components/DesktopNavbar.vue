@@ -13,6 +13,11 @@
          {{ items.title }}
         </router-link>
         </span>
+      <span v-if="isStudent" class="flex gap-x-4">
+        <router-link v-for="items in studentItems" :key="items.title" :to="items.path" class="text-white text-lg">
+         {{ items.title }}
+        </router-link>
+        </span>
         </div>
       </div>
     <div class="flex col-end-2 h-[55px]">
@@ -22,17 +27,14 @@
       </div>
       <div v-if="GStore.currentUser" class="flex flex-col-3 gap-x-4 w-auto">
         <button @click="logout" class="bg-white h-[50px] mt-[5px] hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">Logout</button>
-        <div v-if="GStore.currentUser.student == null && GStore.currentUser.tutor">
-        <div v-if="GStore.currentUser.tutor.profileImg == null" class="flex gap-x-4 w-[100px]">
-          <router-link :to="{ name: 'ProfilePage', params: { id: GStore.currentUser.tutor.id } }">
+        <div v-if="GStore.currentUser.student == null && GStore.currentUser.tutor" class="flex gap-2 w-[80px] items-center">
+          <BellIcon :tutor="GStore.currentUser.tutor"/>  
+          <router-link :to="{ name: 'ProfilePage', params: { id: GStore.currentUser.tutor.id } }" v-if="GStore.currentUser.tutor.profileImg == null" class="flex gap-x-4 w-[100px]">
           <img :src="icon" alt="profile" class="w-10 h-10">
           </router-link>
-        </div>
-        <div v-else >
-          <router-link :to="{ name: 'ProfilePage', params: { id: GStore.currentUser.tutor.id } }">
+          <router-link :to="{ name: 'ProfilePage', params: { id: GStore.currentUser.tutor.id } }" v-else >
           <img :src="GStore.currentUser.tutor.profileImg" alt="profile" class="w-10 h-10 rounded-full">
           </router-link>
-        </div>
         </div>
         <div v-if="GStore.currentUser.tutor == null && GStore.currentUser.student">
         <div v-if="GStore.currentUser.student.profileImg == null" class="flex gap-x-4 w-[80px]">
@@ -54,14 +56,14 @@
         </div>
         
         </div>
-        <span v-if="GStore.currentUser" class="text-white flex w-[200px] gap-x-4 items-center">{{GStore.currentUser.firstname}} {{GStore.currentUser.lastname}}</span>    
+        <span v-if="GStore.currentUser" class="text-white flex w-[100px] gap-x-4 items-center">{{GStore.currentUser.displayname}}</span>    
       </div> 
     </div>
     </div>
 </template>
 <script>
-import { navItems } from "@/constants/navItems";
-import { adminItems } from "@/constants/adminItems";
+import { navItems, adminItems, studentItems } from "@/constants/navItems";
+import BellIcon from "@/components/BellIcon";
 import AuthService from "@/services/AuthService";
 export default {
   inject: ['GStore'],
@@ -69,8 +71,9 @@ export default {
   data() {
     return {
       isNavOpen: false,
-      navItems, adminItems,
+      navItems, adminItems, studentItems,
       icon: require("@/assets/icon.png"),
+      pending: 0
     };
   },
   computed: {
@@ -79,8 +82,12 @@ export default {
     },
     isAdmin(){
       return AuthService.hasRoles('ROLE_ADMIN');
+    },
+    isStudent(){
+      return AuthService.hasRoles('ROLE_STUDENT');
     }
   },
+  components: { BellIcon },
   methods: {
     login() {
       this.$router.push({
@@ -94,6 +101,9 @@ export default {
     },
     logout(){
       AuthService.logout()
+      this.$router.push({
+        name: 'HomePage'
+      })
     }
   }
 };
