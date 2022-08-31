@@ -145,20 +145,20 @@
           </div>
           <div class="grid-cols-2 p-3 w-auto">
             <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
-                        <span clas="text-green-500">
+                        <!-- <span clas="text-green-500">
                             <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                        </span>
-              <span class="tracking-wide">Reviews</span>
+                        </span> -->
+              <!-- <span class="tracking-wide">Reviews</span>
             </div>
                 <div>Rating : {{tutor.overallRating}}</div>
                 <ReviewCard v-for="review in tutor.reviews" :key="review.id" :review="review" />
-              </div>
+              </div> -->
           <!--        comment box-->
-          <div class="max-w-lg shadow-md " v-if="isLegit">
+          <!-- <div class="max-w-lg shadow-md " v-if="isLegit">
             <form action="" class="w-full p-4 ">
               <div class="mb-2">
                 <label for="comment" class="text-lg text-gray-600">Add Review</label>
@@ -167,9 +167,10 @@
               </div>
               <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
             </form>
+          </div> -->
+        </div>
           </div>
         </div>
-        
 
       </div>
     </div>
@@ -313,12 +314,12 @@
 <script>
 import AuthService from "@/services/AuthService";
 import TutorService from '@/services/TutorService';
-import ReviewCard from '@/components/ReviewCard';
+// import ReviewCard from '@/components/ReviewCard';
 import RequestService from '@/services/RequestService';
 import BBCodeDescription from '@/components/BBCodeDescription';
 export default {
   name: "TutorDetail",
-  components: {ReviewCard, BBCodeDescription},
+  components: {BBCodeDescription},
   inject: ['GStore'],
   props: {
     tutor: {
