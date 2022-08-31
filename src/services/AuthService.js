@@ -75,12 +75,14 @@ export default {
     },
     hasReviewed(review) {
         if (GStore.currentUser.student && review) {
+            console.log(review)
+            console.log(GStore.currentUser.student)
             let setReviews = []
             for (var x = 0; x < review.length; x++) {
                 setReviews.push(review[x].student.id)
             }
             let containReviews = setReviews.includes(GStore.currentUser.student.id)
-
+            console.log(setReviews)
             return containReviews
         } else {
             return false
