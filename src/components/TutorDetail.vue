@@ -317,6 +317,7 @@ import TutorService from '@/services/TutorService';
 // import ReviewCard from '@/components/ReviewCard';
 import RequestService from '@/services/RequestService';
 import BBCodeDescription from '@/components/BBCodeDescription';
+import GStore from '@/store'
 export default {
   name: "TutorDetail",
   components: {BBCodeDescription},
@@ -331,8 +332,10 @@ export default {
     isAdmin(){
       return AuthService.hasRoles('ROLE_ADMIN');
     },
+    
     BeingStudent(){
-      return AuthService.hasTutor(this.tutor.id)
+      if(GStore.currentUser.student){ return AuthService.hasTutor(this.tutor.id) }
+      else return true
     },
     isLegit(){
       let rules1 = AuthService.hasRoles('ROLE_STUDENT');
