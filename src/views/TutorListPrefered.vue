@@ -77,7 +77,7 @@
           Prev Page</router-link
         >
         <ProfileCard v-for="item in tutors" :key="item.id" :tutor="item" />
-
+        
         <router-link
           class="flex fixed right-0 text-center pd-[20px] mx-4 items-center"
           id="page-next"
@@ -88,6 +88,7 @@
           Next Page</router-link
         >
       </div>
+      <div v-if="this.totalElements == 0" class="container object-none my-[300px] object-center h-full align-middle text-center items-center">No Tutors Found</div>
     </div>
   </div>
   <!-- Main modal -->
