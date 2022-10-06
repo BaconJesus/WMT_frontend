@@ -1,7 +1,7 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 <template>
 <!--  <div class="flex flex-wrap flex-row -mx-4 text-center">-->
-    <div class="cursor-pointer relative max-w-full w-full">
+    <div class="relative max-w-full w-full">
       <!-- card -->
       <div class="transform ease-in-out hover:-translate-y-0.25 my-2">
         <div class="flex-shrink px-[2.5px] py-[10px] max-w-full w-full">

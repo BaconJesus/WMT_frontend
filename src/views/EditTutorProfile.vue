@@ -55,19 +55,29 @@
       </div>
       <div class="mb-6">
         <label class="block mb-2 text-2xl font-medium text-gray-900 ">About Me</label>
-        <textarea
+      </div>
+      <div class="flex mb-6">
+      <textarea v-if="checkPrivilege"
+            class="form-control disabled block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-sky-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            rows="3"
+            placeholder="Write something about yourself ..."
+            v-model="tutor.description"
+            disabled
+      ></textarea>
+      <textarea v-else
             class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-sky-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             rows="3"
             placeholder="Write something about yourself ..."
             v-model="tutor.description"
-        ></textarea>
+      ></textarea>
       </div>
-      <div class="flex justify-center ">
+      <div class="flex mb-6 cursor-pointer justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dar" v-if="checkPrivilege">
+      Edit
+      </div>
+      <div class="flex justify-center">
       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dar">Submit</button>
-      </div>
-      
+      </div>      
     </form>
-    <pre>{{ tutor }}</pre>
     </div>
   </div>
 </div>
@@ -94,6 +104,7 @@ export default {
       tutor: {
         description: '',
         profileImg: '',
+        rewardPoints: null,
         preferences: [],
         subjects:[]
       },
@@ -104,6 +115,14 @@ export default {
       categoryId: null,
       subjects: null
     }
+  },
+  computed: {
+    checkPrivilege() {
+      if(this.tutor.rewardPoints < 30){
+      return false
+      }
+      else return true
+    },
   },
   methods: {
     saveTutor(){
@@ -219,6 +238,7 @@ export default {
             comp.tutor.profileImg = response.data.data.getTutor.profileImg;
             comp.tutor.preferences = response.data.data.getTutor.preferences;
             comp.tutor.subjects = response.data.data.getTutor.subjects;
+            comp.tutor.rewardPoints = response.data.data.getTutor.rewardPoints;
             comp.tutorid = response.data.data.getTutor.id
           })
         })

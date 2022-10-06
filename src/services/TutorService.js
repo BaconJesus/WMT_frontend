@@ -83,6 +83,7 @@ export default {
                 profileImg
                 active
                 overallRating
+                reviewReceived
                 rewardPoints
                 students{
                     id
@@ -178,6 +179,7 @@ export default {
                 id
                 description
                 profileImg
+                rewardPoints
                 subjects{
                     id
                 }
