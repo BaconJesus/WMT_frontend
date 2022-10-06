@@ -24,6 +24,7 @@
             </div>
             </div>
             <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1" v-if="tutor">{{tutor.user.firstname}} {{tutor.user.lastname}}</h1>
+            <div class="container text-center">Reward Points: {{tutor.rewardPoints}}</div>
             
           </div>
           <div v-if="GStore.currentUser.tutor">
@@ -56,6 +57,9 @@
             </div>
             <div class="grid grid-cols-3">
               <div class="text-center my-2" v-for="items in tutor.students" :key="items.id">
+                <router-link
+                :to="{ name: 'StProfilePage', params: { id: items.id } }"
+              >
                 <img class="h-16 w-16 rounded-full mx-auto"
                      :src="items.profileImg"
                      alt=""
@@ -64,6 +68,7 @@
                      :src="icon"
                      alt=""
                      v-else />
+                </router-link>
                 <a href="#" class="text-main-color">{{items.user.displayname}}</a>
               </div>
             </div>
@@ -152,29 +157,36 @@
                                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </span> -->
-              <!-- <span class="tracking-wide">Reviews</span>
+              <span class="tracking-wide">Reviews</span>
             </div>
-                <div>Rating : {{tutor.overallRating}}</div>
+                <div class="flex">Overall Rating <svg @click="setRating(1)" aria-hidden="true" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>First star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>{{tutor.overallRating}}</div>
                 <ReviewCard v-for="review in tutor.reviews" :key="review.id" :review="review" />
-              </div> -->
-          <!--        comment box-->
-          <!-- <div class="max-w-lg shadow-md " v-if="isLegit">
+              </div>
+                 <!-- comment box-->
+          <div class="max-w-lg shadow-md " v-if="isLegit">
             <form action="" class="w-full p-4 ">
               <div class="mb-2">
                 <label for="comment" class="text-lg text-gray-600">Add Review</label>
                 <textarea class="w-full h-20 p-2 border rounded focus:outline-none focus:ring-gray-300 focus:ring-1"
-                          name="comment" placeholder=""></textarea>
+                          placeholder="" v-model="writing"></textarea>
+                <div class="flex items-center">
+                    <svg @click="setRating(1)" aria-hidden="true" :class="[(toRate>=1 && 'w-5 h-5 text-yellow-400 cursor-pointer') || (toRate<1 && 'w-5 h-5 text-gray-300 dark:text-gray-500 cursor-pointer')]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>First star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    <svg @click="setRating(2)" aria-hidden="true" :class="[(toRate>=2 && 'w-5 h-5 text-yellow-400 cursor-pointer') || (toRate<2 && 'w-5 h-5 text-gray-300 dark:text-gray-500 cursor-pointer')]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Second star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    <svg @click="setRating(3)" aria-hidden="true" :class="[(toRate>=3 && 'w-5 h-5 text-yellow-400 cursor-pointer') || (toRate<3 && 'w-5 h-5 text-gray-300 dark:text-gray-500 cursor-pointer')]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Third star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    <svg @click="setRating(4)" aria-hidden="true" :class="[(toRate>=4 && 'w-5 h-5 text-yellow-400 cursor-pointer') || (toRate<4 && 'w-5 h-5 text-gray-300 dark:text-gray-500 cursor-pointer')]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    <svg @click="setRating(5)" aria-hidden="true" :class="[(toRate>=5 && 'w-5 h-5 text-yellow-400 cursor-pointer') || (toRate<5 && 'w-5 h-5 text-gray-300 dark:text-gray-500 cursor-pointer')]" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{{toRate}} out of 5</p>
+                </div>
+
               </div>
-              <button class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
+              <button @click="sendReview" class="px-3 py-2 text-sm text-blue-100 bg-blue-600 rounded">Submit</button>
             </form>
-          </div> -->
+          </div>
         </div>
           </div>
         </div>
 
       </div>
-    </div>
-  </div>
 <div
     v-if="requestModal"
     id="defaultModal"
@@ -314,13 +326,14 @@
 <script>
 import AuthService from "@/services/AuthService";
 import TutorService from '@/services/TutorService';
-// import ReviewCard from '@/components/ReviewCard';
+import ReviewCard from '@/components/ReviewCard';
 import RequestService from '@/services/RequestService';
 import BBCodeDescription from '@/components/BBCodeDescription';
+import ReviewService from '@/services/ReviewService';
 import GStore from '@/store'
 export default {
   name: "TutorDetail",
-  components: {BBCodeDescription},
+  components: {BBCodeDescription, ReviewCard},
   inject: ['GStore'],
   props: {
     tutor: {
@@ -348,7 +361,9 @@ export default {
     return {
       icon: require("@/assets/icon.png"),
       message: '',
-      requestModal: false
+      requestModal: false,
+      writing: '',
+      toRate: 5
     };
   },
   methods:{
@@ -360,6 +375,18 @@ export default {
         }
         )
         }
+    },
+    setRating(number){
+        this.toRate = number;
+    },
+    sendReview(){
+        ReviewService.sendReview(this.writing, this.toRate, GStore.currentUser.student.id, this.tutor.id)
+        .then(()=>{
+          setTimeout(() => {
+                        // After 3 seconds remove it
+                        location.reload()
+                    }, 1500)
+        })
     },
     unrestrict(id){
         if(confirm("Are you sure you want to return this user?")){

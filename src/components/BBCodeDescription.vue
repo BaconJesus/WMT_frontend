@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
 <div class="px-4 py-2 " v-html="parsedDescription">
 
 </div>
@@ -22,4 +22,4 @@ export default {
       this.parsedDescription = bbCodeParser.parse(this.description)
   }
 }
-</script> -->
+</script>
