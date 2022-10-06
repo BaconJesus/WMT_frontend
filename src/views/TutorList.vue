@@ -210,6 +210,7 @@
           </router-link
         >
       </div>
+      <div v-if="this.totalElements == 0" class="container object-none my-[300px] object-center h-full align-middle text-center items-center">No Tutors Found</div>
     </div>
   </div>
   <!-- Main modal -->
