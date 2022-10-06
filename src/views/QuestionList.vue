@@ -18,77 +18,109 @@
             'container xl:max-w-6xl mx-auto px-4 opacity-30 transition'),
       ]"
     >
-      <header class="text-center mb-2 lg:px-20">
+      <header class="text-center mx-auto mb-2 lg:px-20">
         <h2 class="text-2xl leading-normal font-bold text-black">
           Where is My Tutor
         </h2>
       </header>
       <!--      searchbar-->
       <div
-        class="searchbar container flex gap-10 items-center justify-items-center"
+        class="searchbar container flex gap-5 items-center justify-items-center"
       >
-      <button
-          @click="reset"
-          class="
-            text-white
-            flex-auto
-            bg-red-700
-            hover:bg-red-800
-            focus:ring-4 focus:outline-none focus:ring-blue-300
-            font-medium
-            rounded-lg
-            text-sm
-            px-4
-            py-2
-            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
-          "
-        >
-          Reset
-        </button>
-       
-        <button
-          @click="showModal = true"
-          class="
-            text-white
-            flex-auto
-            bg-blue-700
-            hover:bg-blue-800
-            focus:ring-4 focus:outline-none focus:ring-blue-300
-            font-medium
-            rounded-lg
-            text-sm
-            px-4
-            py-2
-            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
-          "
-        >
-          Search by preference
-        </button>
+        <CategorySelection @click="InputCategory(item.id);"
+        v-for="item in categories" :key="item.id" :category="item"
+        :class="[!CheckSelectedCategory(item.id) && 'bg-white-500 cursor-pointer' || CheckSelectedCategory(item.id) && 'bg-sky-500 cursor-pointer']"
+          />
       </div>
 
       <div class="flex flex-wrap flex-row mx-4 text-center items-center">
+        
+        <ProfileCard v-for="item in tutors" :key="item.id" :tutor="item" />
+
+      </div>
+      <div class="flex flex-col-2 items-center grid grid-cols-6">
         <router-link
-          class="flex fixed left-0 text-center pd-[20px] mx-4 items-center"
+          class="inline-flex
+              relative
+              items-center
+              py-2
+              px-4
+              text-sm
+              font-medium
+              text-gray-500
+              bg-white
+              rounded-lg
+              border border-gray-300
+              hover:bg-gray-100 hover:text-gray-700
+              dark:bg-gray-800
+              dark:border-gray-700
+              dark:text-gray-400
+              dark:hover:bg-gray-700
+              dark:hover:text-white
+              left-0"
           id="page-prev"
           :to="{ name: 'TutorList', query: { page: page - 1, name: name } }"
           rel="prev"
           v-if="page != 1"
         >
+        <svg
+              aria-hidden="true"
+              class="mr-2 w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
           Prev Page</router-link
         >
-        <ProfileCard v-for="item in tutors" :key="item.id" :tutor="item" />
         
         <router-link
-          class="flex fixed right-0 text-center pd-[20px] mx-4 items-center"
+          class="inline-flex
+              col-end-7
+              items-right
+              py-2
+              px-4
+              text-sm
+              font-medium
+              text-gray-500
+              bg-white
+              rounded-lg
+              border border-gray-300
+              hover:bg-gray-100 hover:text-gray-700
+              dark:bg-gray-800
+              dark:border-gray-700
+              dark:text-gray-400
+              dark:hover:bg-gray-700
+              dark:hover:text-white
+              right-0
+              relative"
           id="page-next"
           :to="{ name: 'TutorList', query: { page: page + 1, name: name } }"
           rel="next"
           v-if="hasNextPage"
         >
-          Next Page</router-link
+          Next Page
+          <svg
+              aria-hidden="true"
+              class="ml-2 w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </router-link
         >
       </div>
-      <div v-if="this.totalElements == 0" class="container object-none my-[300px] object-center h-full align-middle text-center items-center">No Tutors Found</div>
     </div>
   </div>
   <!-- Main modal -->
@@ -320,90 +352,82 @@ import TutorService from "@/services/TutorService.js";
 import CategoryService from "@/services/CategoryService";
 import SubjectService from "@/services/SubjectService";
 import PreferenceService from "@/services/PreferenceService";
-
+import CategorySelection from '@/components/CategorySelection.vue'
 export default {
-  name: "TutorListPrefered",
+  name: "QuestionList",
   props: {
     page: {
       type: Number,
       required: true,
     },
-    pref: {
+    name: {
       type: String,
-      required: false,
-    },
-    subj: {
-      type: String,
-      required: false,
+      required: true,
     },
   },
   methods: {
-    reset() {
-      this.$router.push({ name: "TutorList"});
-      // TutorService.searchByName(name ,parseInt(routeTo.query.page) || 1,3)
+    CheckSelectedCategory(id){
+      if(this.categoryId == id){
+        return true
+      }
+      else return false
+    },
+    InputCategory(id){
+      if(this.categoryId = id){
+        this.categoryId = null
+      }
+      else this.categoryId = id
     },
     handlePreferenceSearch(input) {
       this.showModal = false
       console.log("Subject ID"+input.target.subject.value)
       console.log("Preference ID"+input.target.preference.value)
       this.$router.push({ name: "TutorListPrefered", query: { page: 1, subj: input.target.subject.value, pref: input.target.preference.value } });
-    },
-    InputCategory() {
-      var id = document.getElementById("category");
-      var option = id.options[id.selectedIndex];
-      SubjectService.getSubjects(option.value).then((response) => {
-        this.subjects = response.data.data.getSubjects;
-        console.log(this.subjects);
-      });
-    },
+    }
   },
-  components: { ProfileCard },
+  components: { ProfileCard, CategorySelection },
   data() {
     return {
       tutors: null,
-      preferences: null,
-      nameSearch: '',
       totalElements: 0,
+      nameSearch: "",
       showModal: false,
       subjects: null,
       selectedCategory: null,
       categories: null,
+      categoryId: null
     };
   },
   created() {
     CategoryService.getCategories().then((response) => {
       this.categories = response.data.data.getCategories;
     });
-    PreferenceService.getPreferences()
-      .then((response) => {
-        this.preferences = response.data.data.getPreferences;
-      })
   },
   // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
-    TutorService.searchByPref(
-      routeTo.query.subj || null,
-      routeTo.query.pref || null,
+    TutorService.searchByName(
+      routeTo.query.name || "",
       parseInt(routeTo.query.page) || 1,
       3
     ).then((response) => {
       next((comp) => {
-        comp.tutors = response.data.data.getMatchTutorPaginationByStudentInput.content;
+        comp.tutors = response.data.data.getMatchTutorPaginationByName.content;
         comp.totalElements =
-          response.data.data.getMatchTutorPaginationByStudentInput.totalElements;
+          response.data.data.getMatchTutorPaginationByName.totalElements;
+        comp.nameSearch = routeTo.query.name;
       });
     });
   },
   beforeRouteUpdate(routeTo) {
-    TutorService.searchByPref(
-      routeTo.query.subj || null,
-      routeTo.query.pref || null,
+    TutorService.searchByName(
+      routeTo.query.name || "",
       parseInt(routeTo.query.page) || 1,
       3
     ).then((response) => {
-      this.tutors = response.data.data.getMatchTutorPaginationByStudentInput.content; // <-----
+      this.tutors = response.data.data.getMatchTutorPaginationByName.content; // <-----
       this.totalElements =
-        response.data.data.getMatchTutorPaginationByStudentInput.totalElements; // <-----
+        response.data.data.getMatchTutorPaginationByName.totalElements; // <-----
+      this.nameSearch = routeTo.query.name;
     });
   },
   computed: {

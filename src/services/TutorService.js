@@ -97,6 +97,8 @@ export default {
                     description
                     rating
                     student{
+                        id
+                        profileImg
                         user{
                             displayname
                         }
