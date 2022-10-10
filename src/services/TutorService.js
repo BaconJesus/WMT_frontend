@@ -94,6 +94,9 @@ export default {
                         displayname
                     }
                 }
+                posts{
+                    id
+                }
                 reviews{
                     description
                     rating

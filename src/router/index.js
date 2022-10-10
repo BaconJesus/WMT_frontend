@@ -21,7 +21,7 @@ import RequestSent from "@/views/RequestSent"
 import GStore from '@/store'
 
 const routes = [
-    { path: "/", name: "HomePage", component: Home },
+    { path: "/", name: "HomePage", component: Home, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     {
         path: "/tutorlist",
         name: "TutorList",
