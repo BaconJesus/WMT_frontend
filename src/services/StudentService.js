@@ -182,4 +182,26 @@ export default {
         }
         return graphqlClient(graphql)
     },
+    getStudentRanking() {
+        const query = `
+        query{
+            getRankedStudents{
+                id
+                profileImg
+                rewardPoints
+                user{
+                    displayname
+                    authorities{
+                        name
+                    }
+                }
+            }
+        }
+        `
+
+        const graphql = {
+            query: query,
+        }
+        return graphqlClient(graphql)
+    }
 }

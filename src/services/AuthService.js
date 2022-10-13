@@ -60,6 +60,19 @@ export default {
             return false
         }
     },
+    checkhasRoles(user, roles) {
+        if (user && roles) {
+            let setRoles = []
+            for (var x = 0; x < user.user.authorities.length; x++) {
+                setRoles.push(user.user.authorities[x].name)
+            }
+            let containRoles = setRoles.includes(roles)
+
+            return containRoles
+        } else {
+            return false
+        }
+    },
     hasTutor(id) {
         if (GStore.currentUser.student && id) {
             let setTutors = []

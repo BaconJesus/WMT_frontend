@@ -4,5 +4,7 @@ export default reactive({
     currentUser: JSON.parse(localStorage.getItem('user')),
     preferences: null,
     categories: null,
-    subjects: null
+    subjects: null,
+    rankTutors: null,
+    rankStudents: null,
 })

@@ -18,6 +18,11 @@ import EditStudent from "@/views/EditStudentProfile";
 import EditTutor from "@/views/EditTutorProfile"
 import PreferenceService from "@/services/PreferenceService";
 import RequestSent from "@/views/RequestSent"
+import TutorRanking from "@/views/TutorRanking";
+import StudentRanking from "@/views/StudentRanking";
+import RankingLayout from "@/views/RankingLayout"
+import TutorService from "@/services/TutorService";
+import StudentService from "@/services/StudentService";
 import GStore from '@/store'
 
 const routes = [
@@ -65,6 +70,38 @@ const routes = [
     { path: "/stprofile/:id", name: "StProfilePage", component: StProfilePage },
     { path: "/request/:id", name: "RequestDetails", component: RequestDetails },
     { path: "/tutornamelist", name: "TutorNameList", component: TutorNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
+    { path: "/studentnamelist", name: "StudentNameList", component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
+    {
+        path: "/rankings",
+        name: "RankingLayout",
+        component: RankingLayout,
+        props: true,
+        children: [{
+                path: 'tutors',
+                name: 'TutorRanking',
+                props: true,
+                component: TutorRanking,
+                beforeEnter: () => {
+                    return TutorService.getTutorRanking()
+                        .then((response) => {
+                            GStore.rankTutors = response.data.data.getRankedTutors;
+                        })
+                }
+            },
+            {
+                path: 'students',
+                name: 'StudentRanking',
+                props: true,
+                component: StudentRanking,
+                beforeEnter: () => {
+                    return StudentService.getStudentRanking()
+                        .then((response) => {
+                            GStore.rankStudents = response.data.data.getRankedStudents;
+                        })
+                }
+            },
+        ]
+    },
     { path: "/studentnamelist", name: "StudentNameList", component: StudentNameList, props: (route) => ({ page: parseInt(route.query.page) || 1 }) },
     { path: "/editstudent/:id", name: 'EditStudent', component: EditStudent },
     {

@@ -299,5 +299,27 @@ export default {
             variables: variable
         }
         return graphqlClient(graphql)
+    },
+    getTutorRanking() {
+        const query = `
+        query{
+            getRankedTutors{
+                id
+                profileImg
+                rewardPoints
+                user{
+                    displayname
+                    authorities{
+                        name
+                    }
+                }
+            }
+        }
+        `
+
+        const graphql = {
+            query: query,
+        }
+        return graphqlClient(graphql)
     }
 }

@@ -4,7 +4,7 @@
     <div v-if="!student.active" class="gap-4 pd-auto bg-red-300 h-[40px] px-4 md:flex items-center justify-items-center">
         <p class="text-center w-full text-2xl">This user is restricted</p>
     </div>
-  <div class="overflow-y-scroll bg-white">
+  <div class="overflow-y-scroll bg-white h-screen">
     <div class="container mx-auto my-5 p-5 w-[1200px]">
       <div class="md:flex no-wrap md:-mx-2 ">
         <!-- Left -->
