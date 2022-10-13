@@ -64,6 +64,7 @@ export default {
             getStudent(id:$id){
                 id
                 description
+                rewardPoints
                 profileImg
                 active
                 tutors{

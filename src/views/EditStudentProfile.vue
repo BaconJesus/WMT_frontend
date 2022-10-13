@@ -2,7 +2,11 @@
 <div class="overflow-y-scroll ">
   <!-- component -->
   <!-- This is an example component -->
-  <div class="flex flex-wrap max-w-2xl mx-auto bg-white p-16">
+  <div :class="[
+        (!showEditModal && 'flex flex-wrap max-w-2xl mx-auto bg-white p-16') ||
+          (showEditModal &&
+            'flex flex-wrap max-w-2xl mx-auto bg-white p-16 opacity-30 transition'),
+      ]">
     <div class="container mx-auto my-5 p-5 w-full">
 
     <form @submit.prevent="saveStudent">
@@ -23,19 +27,196 @@
 
       <div class="mb-6">
         <label class="block mb-2 text-2xl font-medium text-gray-900 ">About Me</label>
-        <textarea
-            class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-sky-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+      <textarea v-if="checkPrivilege"
+            class="form-control mb-2 disabled block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-sky-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             rows="3"
             placeholder="Write something about yourself ..."
             v-model="student.description"
-        ></textarea>
+            disabled
+      ></textarea>
+      <textarea v-else
+            class="form-control mb-2 block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-sky-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            rows="3"
+            placeholder="Write something about yourself ..."
+            v-model="student.description"
+      ></textarea>
+              <div @click="EditModal" class="flex mb-6 cursor-pointer justify-center text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dar" v-if="checkPrivilege">
+      Edit
+      </div>
       </div>
       <div class="flex justify-center ">
       <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dar">Submit</button>
       </div>
       
     </form>
-    <pre>{{ student }}</pre>
+    </div>
+  </div>
+        <!-- Push modal -->
+  <div
+    v-if="showEditModal"
+    id="defaultModal"
+    tabindex="-1"
+    class="
+      overflow-y-auto overflow-x-hidden
+      fixed
+      top-0
+      right-0
+      left-0
+      z-50
+      w-full
+      md:inset-0
+      h-modal
+      md:h-full
+      justify-center
+      items-center
+      flex
+    "
+    aria-modal="true"
+    role="dialog"
+  >
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div
+          class="
+            flex
+            justify-between
+            items-start
+            p-4
+            rounded-t
+            border-b
+            dark:border-gray-600
+          "
+        >
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+            Edit About Me
+          </h3>
+          <button
+            @click="showEditModal = false"
+            type="button"
+            class="
+              text-gray-400
+              bg-transparent
+              hover:bg-gray-200 hover:text-gray-900
+              rounded-lg
+              text-sm
+              p-1.5
+              ml-auto
+              inline-flex
+              items-center
+              dark:hover:bg-gray-600 dark:hover:text-white
+            "
+            data-modal-toggle="defaultModal"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="flex no-wrap">
+          <div class="w-10/12">
+            <textarea
+              type="search"
+              id="default-search"
+              class="
+                flex-auto
+                w-full
+                h-full
+                p-4
+                text-sm text-gray-900
+                bg-blue-50
+                rounded-lg
+                border border-gray-300
+                focus:ring-blue-500 focus:border-blue-500
+                dark:bg-sky-200
+                dark:border-gray-300
+                dark:placeholder-gray-400
+                dark:text-black
+                dark:focus:ring-blue-500
+                dark:focus:border-blue-500
+              "
+              placeholder="Message"
+              name="message"
+              v-model="editmessage"
+            />
+            
+          </div>
+          <div class="mx-2 w-2/12">
+            <button @click="bold">Bold</button><br/>
+            <button @click="italic">Italic</button><br/>
+            <button @click="underline">Underline</button><br/>
+            <button @click="color">Color</button><br/>
+            <button @click="image">Image</button><br/>
+            <button @click="newLine">New Line</button>
+          </div>
+        </div>
+          <!-- Modal footer -->
+          <div
+            class="
+              flex
+              items-center
+              p-6
+              space-x-2
+              rounded-b
+              border-t border-gray-200
+              dark:border-gray-600
+            "
+          >
+            <div @click="handleEditPost"
+              data-modal-toggle="defaultModal"
+              type="submit"
+              class="
+                text-white
+                bg-blue-700
+                hover:bg-blue-800
+                focus:ring-4 focus:outline-none focus:ring-blue-300
+                font-medium
+                rounded-lg
+                text-sm
+                px-5
+                py-2.5
+                text-center
+                dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+                cursor-pointer
+              "
+            >
+              Submit
+            </div>
+            <div @click="Preview" class="
+                text-white
+                bg-blue-700
+                hover:bg-blue-800
+                focus:ring-4 focus:outline-none focus:ring-blue-300
+                font-medium
+                rounded-lg
+                text-sm
+                px-5
+                py-2.5
+                text-center
+                dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+                cursor-pointer
+              ">Preview</div>
+            
+          </div>
+          <b v-if="showPreview" class="mx-2 p-2 mb-2">Preview</b>
+          <div v-if="showPreview" class="overflow-y-scroll h-[350px] border border-blue-500 border-2 rounded">
+            
+              <BBCodeDescription :description="editmessage"/>
+            </div>
+      </div>
     </div>
   </div>
 </div>
@@ -45,23 +226,36 @@
 import UploadImages from 'vue-upload-drop-images'
 import StudentService from '@/services/StudentService'
 import UploadService from '@/services/UploadService'
+import BBCodeDescription from '@/components/BBCodeDescription';
 import GStore from '@/store'
 export default {
   inject: ['GStore'],
   name: "EditStudentProfile",
   components: {
-    UploadImages
+    UploadImages, BBCodeDescription
   },
   data() {
     return {
       student: {
         description: '',
+        rewardPoints: 0,
         profileImg: '', 
       },
       files: [],
       icon: require("@/assets/icon.png"),
       studentid: null,
+      showEditModal: false,
+      showPreview: false,
+      editmessage: ''
     }
+  },
+    computed: {
+    checkPrivilege() {
+      if(this.student.rewardPoints < 30){
+      return false
+      }
+      else return true
+    },
   },
   methods: {
     saveStudent(){
@@ -95,6 +289,39 @@ export default {
     handleImage(file){
       this.files = file
     },
+    EditModal(){
+      this.editmessage = this.student.description;
+      this.showEditModal = true;
+    },
+    Preview(){
+      this.showPreview = false;
+      setTimeout(() => {
+                        // After 3 seconds remove it
+                         this.showPreview = true;
+                    }, 500)
+    },
+    handleEditPost(){
+      this.student.description = this.editmessage;
+      this.showEditModal = false;
+    },
+    bold(){
+      this.editmessage = this.editmessage + "[b]<INSERT TEXT HERE>[/b]"
+    },
+    italic(){
+      this.editmessage = this.editmessage + "[i]<INSERT TEXT HERE>[/i]"
+    },
+    color(){
+      this.editmessage = this.editmessage + "[color=<COLORHEX>]<INSERT TEXT HERE>[/color]"
+    },
+    underline(){
+      this.editmessage = this.editmessage + "[u]<INSERT TEXT HERE>[/u]"
+    },
+    image(){
+      this.editmessage = this.editmessage + "[img=<IMAGE URL HERE>]"
+    },
+    newLine(){
+      this.editmessage = this.editmessage + "\n[br]"
+    }
   },
    // eslint-disable-next-line no-unused-vars
   beforeRouteEnter(routeTo, routeFrom, next) {
@@ -104,6 +331,7 @@ export default {
             console.log(response.data.data.getStudent)
             comp.student.description = response.data.data.getStudent.description;
             comp.student.profileImg = response.data.data.getStudent.profileImg;
+            comp.student.rewardPoints = response.data.data.getStudent.rewardPoints;
             comp.studentid = response.data.data.getStudent.id
           })
         })

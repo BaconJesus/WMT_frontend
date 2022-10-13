@@ -21,6 +21,7 @@
             </div>
             </div>
             <h1 class="flex justify-center mx-auto name text-gray-900 font-bold text-xl leading-8 my-1" v-if="student">{{student.user.firstname}} {{student.user.lastname}}</h1>
+            <div class="container text-center">Reward Points: {{student.rewardPoints}}</div>
          
           </div>
           <div v-if="GStore.currentUser.student">
@@ -43,7 +44,11 @@
         <div class="w-full md:w-9/12 mx-2 h-64">
           <!-- Profile tab -->
           <!-- About Section -->
-          <div class="bg-white p-3 shadow-sm rounded-sm">
+          <div :class="[
+        ((student.rewardPoints < 30) && 'bg-white p-3 shadow-sm rounded-sm') ||
+          (!(student.rewardPoints < 30) &&
+            'bg-white p-3 shadow-sm rounded-sm border border-blue-500 border-2 rounded'),
+          ]">
             <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                         <span clas="text-green-500">
                             <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -53,11 +58,12 @@
                             </svg>
                         </span>
               <span class="tracking-wide">About</span>
-            </div>
-            <div class="text-gray-700 h-[300px]">
+                          </div>
+            <div class="container overflow-y-scroll h-[350px] text-gray-700">
               <div class="grid md:grid-cols-2 text-sm">
 <!--                <div class="grid grid-cols-2">-->
-                  <div class="description px-4 py-2 ">{{student.description}}</div>
+                  <div class="description px-4 py-2 " v-if="student.rewardPoints < 30">{{student.description}}</div>
+                  <BBCodeDescription :description="student.description" v-else/>
 <!--                </div>-->
               </div>
             </div>
@@ -71,8 +77,10 @@
 <script>
 import AuthService from "@/services/AuthService";
 import StudentService from '@/services/StudentService'
+import BBCodeDescription from '@/components/BBCodeDescription';
 export default {
   name: "StudentDetail",
+  components: {BBCodeDescription},
   inject: ['GStore'],
   props: {
     student: {

@@ -10,10 +10,12 @@
     <img :src="logo"  alt="profile">
     </div>
   </div>
+  <div v-if="GStore.currentUser">
   <div v-if="GStore.currentUser.tutor" class="flex justify-center w-full ">
     <button @click="showPushModal = true" class="rounded mx-2 bg-blue-500 description px-4 py-2 ">Push post</button>
     <button v-if="checkHavePost" @click="showCloseModal = true" class="rounded mx-2 bg-blue-500 description px-4 py-2 ">Close post</button>
     <button v-else class="rounded mx-2 bg-grey-500 description px-4 py-2 " disabled>Close post</button>
+  </div>
   </div>
   <div class="flex justify-center w-full mt-2">
   <PostsCard v-for="post in posts" :key="post.id" :post="post" />
@@ -349,11 +351,13 @@ export default {
         comp.posts = response.data.data.getPosts.content;
         comp.totalElements =
         response.data.data.getPosts.totalElements;
+        if(GStore.currentUser){
         if(GStore.currentUser.tutor){
           TutorService.getTutor(GStore.currentUser.tutor.id).then((res) => {
             console.log(res)
             comp.tutorpost = res.data.data.getTutor.posts;
           })
+        }
         }
       });
     });

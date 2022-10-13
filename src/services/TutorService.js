@@ -144,23 +144,6 @@ export default {
             editTutor(tutor:$tutor, id:$id){
                 id
                 profileImg
-                description
-                students{
-                    user{
-                        firstname
-                        displayname
-                        displayname
-                    }
-                }
-                subjects{
-                    name
-                    category{
-                        name
-                    }
-                }
-                preferences{
-                    name
-                }
             }
         }
         `
