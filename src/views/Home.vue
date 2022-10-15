@@ -1,9 +1,10 @@
 <template>
 <!--    <p class="text-sky-500 text-3xl">Where is My Tutor</p>-->
+<div class="overflow-y-scroll h-screen">
 <div :class="[
-        (!(showPushModal || showCloseModal) && 'container mx-auto my-5 p-5 w-[1200px]') ||
+        (!(showPushModal || showCloseModal) && 'container mx-auto my-5  w-full ') ||
           ((showPushModal || showCloseModal) &&
-            'container mx-auto my-5 p-5 w-[1200px] opacity-30 transition') 
+            'container mx-auto my-5 w-full  opacity-30 transition') 
       ]">
   <div class="flex justify-center w-full ">
     <div class="w-96">
@@ -17,9 +18,10 @@
     <button v-else class="rounded mx-2 bg-grey-500 description px-4 py-2 " disabled>Close post</button>
   </div>
   </div>
-  <div class="flex justify-center w-full mt-2">
+  <div class="justify-center w-full mt-2">
   <PostsCard v-for="post in posts" :key="post.id" :post="post" />
   </div>
+
 </div>
     <!-- Push modal -->
   <div
@@ -295,6 +297,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -386,7 +389,8 @@ export default {
           return true
       }
       else return false
-    }
+    },
   },
+    
 };
 </script>
